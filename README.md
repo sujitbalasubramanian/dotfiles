@@ -1,0 +1,2 @@
+# dotfiles
+myarch config
