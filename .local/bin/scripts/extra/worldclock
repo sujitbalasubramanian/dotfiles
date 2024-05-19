@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if [ $1 ]; then
+  case $1 in
+    "-a"|"--all")
+      for tz in $(timedatectl list-timezones); do
+        td=$(TZ=$tz date +'%a, %d %b %Y %I:%M %P %Z')
+        printf "%-30s %s\n" "$tz" "$td";
+      done ;;
+    "-f"|"--find")
+      if command -v fzf > /dev/null ; then
+        tzlist=$(timedatectl list-timezones | fzf -m)
+        for tz in $tzlist; do
+          td=$(TZ=$tz date +'%a, %d %b %Y %I:%M %P %Z')
+          printf "%-30s %s\n" "$tz" "$td";
+        done 
+      else
+        echo "fzf not found! install fzf"
+      fi ;;
+    "-h"|"--help")
+      echo "world clock in terminal"
+      echo
+      echo "Usage: worldclock [-a|--all] [-f|--find] [-h|--help]"
+      echo
+      echo "worldclock -a|--all   prints all timezones"
+      echo "worldclock -f|-find   prints selected timezones in fzf multi mode "
+      echo "                      You can select multiple timezones by pressing <Tab>"
+      echo ;;
+  esac
+fi
+

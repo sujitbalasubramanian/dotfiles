@@ -1,0 +1,11 @@
+#!/bin/sh
+
+xcompmgr &
+xrdb $HOME/.config/x11/xresources &
+dunst &
+sxhkd &
+unclutter &
+/usr/bin/lxsession &
+~/.local/bin/scripts/wall/setwall -o set &
+
+exec i3

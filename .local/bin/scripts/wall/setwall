@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v xwallpaper)" ]; then
+    echo "Error: xwallpaper is not installed. please install xwallpaper."
+    exit 1
+fi
+
+while getopts ":o:" opt ; do
+    case $opt in
+        o) option=$OPTARG;;
+        \?) echo "Invalid option -$OPTARG" >&2 ;;
+    esac
+done
+
+case $option in
+    "set")
+        if [ -f ~/.config/wall ]; then
+            xwallpaper --stretch ~/.config/wall
+        else 
+            `setwall -o sel`
+        fi ;;
+    "sel")
+        nsxiv $(find $HOME/Pictures/wallpapers -type d | dmenu -i -p "path :") ;;
+    *)
+        echo "Invalid option" ;;
+esac

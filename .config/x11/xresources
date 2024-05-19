@@ -1,0 +1,22 @@
+! font
+*.font: FiraCode Nerd Font:style=bold:size=12
+
+! gruvbox theme
+*.background: #262626
+*.foreground: #ebdbb2
+*.color0: #262628
+*.color8: #928374
+*.color1: #CC241D
+*.color9: #fb4934
+*.color2: #98971a
+*.color10: #b8bb26
+*.color3: #FF8F15
+*.color11: #FFAF00
+*.color4: #458588
+*.color12: #83a598
+*.color5: #b16286
+*.color13: #d3869b
+*.color6: #689d6a
+*.color14: #8ec07c
+*.color7: #a89984
+*.color15: #ebdbb2

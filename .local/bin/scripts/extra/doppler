@@ -1,0 +1,29 @@
+#!/bin/sh 
+
+if [ $1 ]; then
+    case $1 in
+        -bt)
+            mpv --loop=inf https://mausam.imd.gov.in/lightning/Converted/BT.gif ;;
+        -rr)
+            mpv --loop=inf https://mausam.imd.gov.in/Radar/MOSAIC/Converted/mosaic.gif ;;
+        -d)
+            mpv --loop=inf https://mausam.imd.gov.in/Satellite/Converted/IR1.gif ;;
+        -dd)
+            wget https://mausam.imd.gov.in/Satellite/Converted/IR1.gif -O ~/.cache/doppler.gif 
+            sxiv -a ~/.cache/doppler.gif ;;
+        -dc)
+            sxiv -a ~/.cache/doppler.gif ;;
+        "-h"|"--help")
+            echo "doppler radar script for india"
+            echo
+            echo "Usage: doppler [-bt] [-rr] [-d] [-dd] [-dc] [-h|--help]"
+            echo
+            echo "-bt brightness temperature"
+            echo "-rr radar reflectivity"
+            echo "-d  doppler radar"
+            echo "-dd download doppler"
+            echo "-dc doppler cache"
+            echo
+            ;;
+    esac
+fi
