@@ -1,0 +1,20 @@
+set surround
+set commentary
+
+set mouse=a
+set clipboard+=unnamedplus
+set number
+set relativenumber
+set incsearch
+set hlsearch
+set cursorline
+set splitright splitbelow
+set smartcase
+set expandtab
+filetype plugin on
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'machakann/vim-highlightedyank'
+

@@ -6,6 +6,6 @@ dunst &
 sxhkd &
 unclutter &
 /usr/bin/lxsession &
-~/.local/bin/scripts/wall/setwall -o set &
+~/.local/bin/scripts/setbg -s &
 
 exec i3

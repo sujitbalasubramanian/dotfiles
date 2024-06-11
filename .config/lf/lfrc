@@ -5,6 +5,7 @@ set ifs "\n"
 set icons
 set hidden
 set cursorpreviewfmt "\033[7;2m"
+set previewer ~/.config/lf/preview
 
 cmd open &{{
     case $(file --mime-type -Lb $f) in
@@ -60,20 +61,25 @@ cmd zip ${{
 # bindings
 map o &mimeopen $f
 map O $mimeopen --ask $f
-map x $$f
-map X !$f
 
 map <enter> shell
 map ` !true
 
 map m
 map md :push %mkdir<space>
-map mf :push %mkdir<space>
+map mf :push %touch<space>
+map mx $$f
+map mX !$f
+
+map x cut
 
 map d
 map dd cut
 map dt trash
-map dD delete
+map dd delete
+map dr %dragon-drop -x $fx
+map da %dragon-drop -a -x $fx
+map ds %dragon-drop $fx
 
 map r push A<c-u> # new rename
 map I :rename; cmd-home # at the very beginning
@@ -83,3 +89,7 @@ map a :rename; cmd-right # after extension
 
 map M mark-save
 map E extract
+
+map s
+map si %devour nsxiv $f
+map sz %devour zathura $f

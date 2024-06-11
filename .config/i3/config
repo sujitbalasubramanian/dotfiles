@@ -1,21 +1,54 @@
-# #---Configuration---# #
-# Definitions
-set $mod Mod1
+#############
+#Definitions#
+#############
 
-# font
+set $mod Mod1
 font pango:FiraCode Nerd Font 12
 
 # title & gaps
 for_window [class="^.*"] border pixel 2
 gaps inner 5px
-gaps outer 5px
+# gaps outer 5px
+
+#######
+#THEME#
+#######
+
+# set primary gruvbox colorscheme colors
+set $bg #282828
+set $fg #f9f5d7
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $darkgray #1d2021
+
+# class                 border|backgr|text|indicator|child_border
+client.focused          $blue $blue $darkgray $purple $blue
+client.focused_inactive $darkgray $darkgray $fg $purple $darkgray
+client.unfocused        $darkgray $darkgray $fg $purple $darkgray
+client.urgent           $red $red $white $red $red
 
 # i3bar
 bar {
-        status_command i3status
+    status_command i3status
+    colors {
+        background $bg
+        statusline $fg
+        focused_workspace    $aqua $aqua $darkgray
+        inactive_workspace   $darkgray $darkgray $yellow
+        active_workspace     $darkgray $darkgray $yellow
+        urgent_workspace     $red $red $bg
+    }
 }
 
-# #---Bindings---# #
+##########
+#Bindings#
+##########
+
 # general & config
 bindsym $mod+b bar mode toggle
 bindsym $mod+f fullscreen toggle
@@ -90,7 +123,7 @@ set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
-set $ws10 "0"
+set $ws10 "10"
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
