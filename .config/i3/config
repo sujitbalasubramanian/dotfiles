@@ -35,6 +35,7 @@ client.urgent           $red $red $white $red $red
 # i3bar
 bar {
     status_command i3status
+    position top
     colors {
         background $bg
         statusline $fg

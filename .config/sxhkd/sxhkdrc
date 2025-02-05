@@ -4,7 +4,7 @@ super + Escape
 
 # application bindings
 alt + Return
-    alacritty
+    ghostty
 
 super + l
     slock
@@ -19,7 +19,7 @@ super + v
     pavucontrol
 
 super + n
-    alacritty -e nvim ~/Documents/wiki/index.md
+    obsidian
 
 # scripts
 alt + p

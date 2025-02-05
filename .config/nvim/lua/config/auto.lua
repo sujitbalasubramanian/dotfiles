@@ -1,24 +1,26 @@
--- Setup language servers.
-local lspconfig = require('lspconfig')
-lspconfig.tsserver.setup {}
-lspconfig.rust_analyzer.setup {
-    -- Server-specific settings. See `:help lspconfig-setup`
-    settings = {
-        ['rust-analyzer'] = {},
-    },
-}
+local autocmd = vim.api.nvim_create_autocmd
+local autogrp = vim.api.nvim_create_augroup
 
--- Global mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+-- Enter insert mode when switching to terminal
+autocmd('TermOpen', {
+    command = 'setlocal listchars= nonumber norelativenumber nocursorline',
+})
+
+autocmd('TermOpen', {
+    pattern = '',
+    command = 'startinsert'
+})
+
+-- Close terminal buffer on process exit
+autocmd('BufLeave', {
+    pattern = 'term://*',
+    command = 'stopinsert'
+})
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
-vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+autocmd('LspAttach', {
+    group = autogrp('LspConfig', {}),
     callback = function(ev)
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'

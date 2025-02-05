@@ -13,7 +13,7 @@ order += "volume master"
 order += "tztime local"
 
 wireless _first_ {
-        format_up = "W: %essid %quality "
+        format_up = "W: %essid %quality"
         format_down = "W: down"
 }
 
@@ -22,15 +22,12 @@ ethernet _first_ {
         format_down = "E: down"
 }
 
-
 disk "/" {
-        format = "%avail"
+        format = "D: %avail"
 }
 
 memory {
-        format = "%used/%available"
-        threshold_degraded = "1G"
-        format_degraded = "MEMORY < %available"
+        format = "M: %used"
 }
 
 battery all {
@@ -38,9 +35,9 @@ battery all {
 }
 
 volume master {
-    format = "Vol: %volume"
+    format = "V: %volume"
 }
 
 tztime local {
-        format = "%d-%m-%y %a %H:%M"
+        format = "%d-%b-%y %a %H:%M"
 }

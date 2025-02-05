@@ -1,4 +1,4 @@
 require("config.set")
-require("config.remap")
-require("config.lsp")
-require("config.cmp")
+require("config.keymap")
+require("config.auto")
+require("config.lazy")

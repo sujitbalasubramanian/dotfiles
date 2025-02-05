@@ -27,7 +27,7 @@ alias lsaur='pacman -Qqm'
 # applications
 alias bc="bc -ql"
 alias cat="bat --paging=never"
-alias lf="lfrun"
+alias fm="yazi"
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
 # bare repo
