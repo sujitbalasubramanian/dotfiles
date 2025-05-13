@@ -91,3 +91,6 @@ fi
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 [ -f "/usr/share/nvm/init-nvm.sh" ] && source /usr/share/nvm/init-nvm.sh
+
+# bun completions
+[ -s "/home/sujit/.bun/_bun" ] && source "/home/sujit/.bun/_bun"
