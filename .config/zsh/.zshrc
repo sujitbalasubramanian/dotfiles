@@ -94,3 +94,6 @@ fi
 
 # bun completions
 [ -s "/home/sujit/.bun/_bun" ] && source "/home/sujit/.bun/_bun"
+
+eval "$(pyenv init -)"
+eval "$(zoxide init zsh)"

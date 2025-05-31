@@ -1,0 +1,11 @@
+# vim:ft=cfg
+
+window-decoration = false
+confirm-close-surface = false
+
+shell-integration = zsh
+theme = GruvboxDark
+font-size = 14
+font-family = FiraCode Nerd Font
+
+keybind = cmd+backspace=esc:w

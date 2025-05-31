@@ -1,5 +1,7 @@
 [manager]
 prepend_keymap = [
+    # devour
+    { on = [ "<C-d>", "i" ], run = "shell -- devour nsxiv ." },
     # mount.yazi
     { on = [ "M", "d" ], run = "plugin mount" },
     # simple-mtpfs plugin

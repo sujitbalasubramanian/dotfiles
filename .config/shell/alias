@@ -17,18 +17,19 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # package manager 
-alias yayi='yay -Syu'
+alias yayi='yay -S'
 alias yayr='yay -Rns'
 alias yayup='yay -Syu'
 alias yayc='yay -Yc'
 alias pacc='sudo pacman -R $(pacman -Qtdq)'
-alias lsaur='pacman -Qqm'
 
 # applications
 alias bc="bc -ql"
 alias cat="bat --paging=never"
 alias fm="yazi"
+alias lzg="lazygit"
+alias lzd="yazi"
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
 # bare repo
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias dotf='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'

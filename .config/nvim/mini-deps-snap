@@ -1,0 +1,11 @@
+return {
+  golf = "abf1bc0c1c4a5482b4a4b36b950b49aaa0f39e69",
+  ["gruvbox.nvim"] = "00e38a379bab3389e187b3953566d67d494dfddd",
+  ["mason.nvim"] = "8024d64e1330b86044fed4c8494ef3dcd483a67c",
+  ["mini.nvim"] = "de0a88d925c8e69fdbb498141207ee43504e5cd1",
+  ["nvim-lspconfig"] = "03bc581e05e81d33808b42b2d7e76d70adb3b595",
+  ["nvim-treesitter"] = "42fc28ba918343ebfd5565147a42a26580579482",
+  ["nvim-treesitter-context"] = "ed1cf48d5af252248c55f50b9427e8ce883a2c6b",
+  ["nvim-ts-autotag"] = "a1d526af391f6aebb25a8795cbc05351ed3620b5",
+  ["nvim-ts-context-commentstring"] = "1b212c2eee76d787bbea6aa5e92a2b534e7b4f8f"
+}
