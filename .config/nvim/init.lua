@@ -12,6 +12,7 @@ require("mini.deps").setup { path = { package = path_package } }
 
 require "remaps"
 require "settings"
+require "term"
 require "ui"
 require "tools"
 require "power-tools"

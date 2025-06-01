@@ -1,12 +1,46 @@
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
+local function build_blink(params)
+  vim.notify('Building blink.cmp', vim.log.levels.INFO)
+  local obj = vim.system({ 'cargo', 'build', '--release' }, { cwd = params.path }):wait()
+  if obj.code == 0 then
+    vim.notify('Building blink.cmp done', vim.log.levels.INFO)
+  else
+    vim.notify('Building blink.cmp failed', vim.log.levels.ERROR)
+  end
+end
+
 now(function()
+  add({
+    source = 'Saghen/blink.cmp',
+    depends = {
+      "L3MON4D3/LuaSnip",
+      "rafamadriz/friendly-snippets",
+    },
+    hooks = {
+      post_install = build_blink,
+      post_checkout = build_blink,
+    },
+  })
+
+  require("luasnip.loaders.from_vscode").lazy_load()
+
+  require('blink.cmp').setup {
+    keymap = { preset = 'default' },
+    snippets = { preset = "luasnip" },
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
+    },
+    fuzzy = { implementation = "prefer_rust_with_warning" }
+  }
+
   add {
     source = "neovim/nvim-lspconfig",
+    build = "cargo build --release",
     depends = {
       "mason-org/mason.nvim",
       "mason-org/mason-lspconfig.nvim",
-      "rafamadriz/friendly-snippets",
+      "Saghen/blink.cmp",
     },
   }
 
@@ -19,19 +53,35 @@ now(function()
       "lua_ls",
       "ts_ls",
       "clangd",
+      "astro",
     },
+    automatic_enable = false,
   }
 
-  require("mini.completion").setup()
+  local capabilities = require('blink.cmp').get_lsp_capabilities()
+  local lspconfig = require('lspconfig')
 
-  require("mini.snippets").setup()
+  lspconfig['lua_ls'].setup({
+    capabilities = capabilities
+  })
+
+  lspconfig['ts_ls'].setup({
+    capabilities = capabilities
+  })
+
+  -- lspconfig['astro'].setup({
+  --   capabilities = capabilities
+  -- })
+
+  lspconfig['clangd'].setup({
+    capabilities = capabilities
+  })
 end)
 
 later(function()
   add {
     source = "stevearc/conform.nvim",
   }
-  -- later_on = { "BufReadPre", "BufNewFile" },
   local conform = require "conform"
 
   conform.setup {
@@ -44,8 +94,10 @@ later(function()
       html = { "prettier" },
       json = { "prettier" },
       yaml = { "prettier" },
-      graphql = { "prettier" },
+      astro = { "prettier" },
       lua = { "stylua" },
+      c = { "clang-format" },
+      cpp = { "clang-format" },
     },
     format_on_save = {
       lsp_fallback = true,
@@ -54,7 +106,7 @@ later(function()
     },
   }
 
-  vim.keymap.set({ "n", "v" }, "<leader>p", function()
+  vim.keymap.set({ "n", "v" }, "<leader>f", function()
     conform.format {
       lsp_fallback = true,
       async = false,
@@ -67,7 +119,6 @@ later(function()
   add {
     source = "mfussenegger/nvim-lint",
   }
-  -- later_on = { "BufReadPre", "BufNewFile" },
   local lint = require "lint"
 
   lint.linters_by_ft = {
@@ -75,6 +126,7 @@ later(function()
     typescript = { "eslint_d" },
     javascriptreact = { "eslint_d" },
     typescriptreact = { "eslint_d" },
+    cpp = { "cpplint" },
   }
 
   local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })

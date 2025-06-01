@@ -33,6 +33,7 @@ now(function()
   })
 
   local km = vim.keymap.set
+  km('n', "<leader>pc", function() MiniPick.builtin.cli() end)
   km('n', "<leader>pf", function() MiniPick.builtin.files() end)
   km('n', "<leader>pb", function() MiniPick.builtin.buffers() end)
   km('n', "<leader>pg", function() MiniPick.builtin.live_grep() end)

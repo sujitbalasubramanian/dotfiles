@@ -4,8 +4,9 @@ window-decoration = false
 confirm-close-surface = false
 
 shell-integration = zsh
-theme = GruvboxDark
+theme = NvimDark
 font-size = 14
 font-family = FiraCode Nerd Font
+# background-opacity = 0.9
 
 keybind = cmd+backspace=esc:w

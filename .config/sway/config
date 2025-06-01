@@ -1,0 +1,201 @@
+# issues: 
+# - click and drag not working in brave
+
+### init
+# exec --no-startup-id waybar
+exec --no-startup-id dunst
+exec --no-startup-id fcitx5
+exec --no-startup-id nm-applet
+# ~/.local/bin/scripts/setbg -s &
+# exec --no-startup-id lxsession
+
+### Globals
+set $mod Mod1
+
+font pango:FiraCode Nerd Font 12
+for_window [class="^.*"] border pixel 2
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+set $term foot
+set $menu wmenu-run
+
+seat * hide_cursor when-typing enable
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+### Idle configuration
+#
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+input type:touchpad {
+  dwt enabled
+  tap enabled
+  natural_scroll enabled
+  middle_emulation enabled
+}
+
+input type:keyboard {
+  xkb_options caps:swapescape
+}
+
+### Key bindings
+floating_modifier $mod
+# tiling_drag modifier titlebar
+
+# WM Bindings
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exit
+
+bindsym $mod+Shift+b bar mode toggle
+bindsym $mod+q kill
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+t [class="^.*"] border toggle
+
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+bindsym $mod+a focus parent
+bindsym $mod+d focus child
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+# resize
+mode "resize" {
+        bindsym $left       resize shrink width 10 px or 10 ppt
+        bindsym $down       resize grow height 10 px or 10 ppt
+        bindsym $up         resize shrink height 10 px or 10 ppt
+        bindsym $right      resize grow width 10 px or 10 ppt
+
+        bindsym Left        resize shrink width 10 px or 10 ppt
+        bindsym Down        resize grow height 10 px or 10 ppt
+        bindsym Up          resize shrink height 10 px or 10 ppt
+        bindsym Right       resize grow width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# workspace
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+### Lock screen
+bindsym $mod+Return exec $TERMINAL
+bindsym $mod+p exec dmenu_run
+
+mode "quicklanch" {
+    bindsym b exec "$BROWSER & swaymsg mode default"
+    bindsym Shift+b exec "chromium & swaymsg mode default"
+    bindsym d exec "$READER & swaymsg mode default"
+    bindsym Shift+d exec "$TERMINAL -e lazydocker & swaymsg mode default"
+    bindsym i exec "gimp & swaymsg mode default"
+    bindsym o exec "obs & swaymsg mode default"
+    bindsym v exec "$TERMINAL -e pulsemixer & swaymsg mode default"
+    bindsym p exec "$TERMINAL -e ncmpcpp & swaymsg mode default"
+    bindsym e exec "$TERMINAL -e yazi & swaymsg mode default"
+    bindsym n exec "$TERMINAL -e $EDITOR & swaymsg mode default"
+    bindsym Shift+n exec "$TERMINAL -e 'cd ~/Dropbox/Notes && $EDITOR index.md .' & swaymsg mode default"
+    bindsym c exec "$TERMINAL -e 'cd ~/.config && $EDITOR .' & swaymsg mode default"
+    bindsym f exec "$TERMINAL -e newsboat & swaymsg mode default"
+    bindsym Shift+f exec "$TERMINAL -e podboat & swaymsg mode default"
+    bindsym m exec "$TERMINAL -e neomutt & swaymsg mode default"
+    bindsym g exec "$TERMINAL -e lazygit & swaymsg mode default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+o mode "quicklanch"
+
+bindsym Print exec "grim $(xdg-user-dir PICTURES)/screenshot/$(date +'%s_grim.png')"
+bindsym $mod+Print exec "grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Pictures/screenshot/$(date +%s).png"
+bindsym Shift+Print exec "grim -g $(slurp) $(xdg-user-dir PICTURES)/screenshot/$(date +'%s_grim.png')"
+bindsym Ctrl+Print exec "grim -g $(slurp) | wl-copy"
+
+bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
+bindsym Mod4+l exec waylock
+
+### Status Bar:
+# Fixme: sway-bar tray breaking
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+  status_command i3status
+}
+
+include /etc/sway/config.d/*
