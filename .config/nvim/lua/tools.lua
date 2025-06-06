@@ -1,7 +1,12 @@
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
+local km = vim.keymap.set
+
 now(function()
   add { source = "lewis6991/gitsigns.nvim" }
+  add { source = "mbbill/undotree" }
+
+  km('n', '<leader>u', vim.cmd.UndotreeToggle)
 
   require("mini.pairs").setup()
 
@@ -32,7 +37,6 @@ now(function()
     }
   })
 
-  local km = vim.keymap.set
   km('n', "<leader>pc", function() MiniPick.builtin.cli() end)
   km('n', "<leader>pf", function() MiniPick.builtin.files() end)
   km('n', "<leader>pb", function() MiniPick.builtin.buffers() end)
@@ -55,4 +59,9 @@ end)
 
 later(function()
   require("mini.surround").setup()
+end)
+
+later(function()
+  require("mini.git").setup()
+  require("mini.diff").setup()
 end)

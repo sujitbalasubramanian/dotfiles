@@ -1,4 +1,5 @@
 local o = vim.opt
+local g = vim.g
 
 o.syntax = "on"
 o.nu = true
@@ -36,11 +37,9 @@ o.fillchars = {
   eob = " ",
 }
 
+g.netrw_banner = 0
+g.netrw_liststyle = 0
+
 vim.cmd [[
 let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown', 'ext': 'md'}]
 ]]
-
--- nvim turns on by default
-o.hlsearch = true
-o.incsearch = true
-o.termguicolors = true

@@ -1,17 +1,4 @@
-local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
-
-later(function()
-  add {
-    source = "folke/zen-mode.nvim",
-    depends = { "folke/twilight.nvim" },
-  }
-
-  require("zen-mode").setup {
-    plugins = {
-      twilight = { enabled = true },
-    },
-  }
-end)
+local now, add = MiniDeps.now, MiniDeps.add
 
 now(function()
   add { source = "vimwiki/vimwiki" }

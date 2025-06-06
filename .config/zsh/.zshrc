@@ -92,8 +92,12 @@ fi
 
 [ -f "/usr/share/nvm/init-nvm.sh" ] && source /usr/share/nvm/init-nvm.sh
 
-# bun completions
-[ -s "/home/sujit/.bun/_bun" ] && source "/home/sujit/.bun/_bun"
-
 eval "$(pyenv init -)"
 eval "$(zoxide init zsh)"
+
+autoload bashcompinit
+bashcompinit
+source "/home/sujit/.local/share/bash-completion/completions/am"
+
+# bun completions
+[ -s "/home/sujit/.local/share/bun/_bun" ] && source "/home/sujit/.local/share/bun/_bun"

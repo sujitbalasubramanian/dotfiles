@@ -61,6 +61,15 @@ now(function()
   local capabilities = require('blink.cmp').get_lsp_capabilities()
   local lspconfig = require('lspconfig')
 
+  local km = vim.keymap.set
+
+  km("n", "<leader>rn", vim.lsp.buf.rename)
+  km("n", "<leader>ca", vim.lsp.buf.code_action)
+  km("n", "[d", vim.diagnostic.goto_prev)
+  km("n", "]d", vim.diagnostic.goto_next)
+
+
+
   lspconfig['lua_ls'].setup({
     capabilities = capabilities
   })
@@ -97,7 +106,7 @@ later(function()
       astro = { "prettier" },
       lua = { "stylua" },
       c = { "clang-format" },
-      cpp = { "clang-format" },
+      -- cpp = { "clang-format" },
     },
     format_on_save = {
       lsp_fallback = true,
@@ -122,10 +131,10 @@ later(function()
   local lint = require "lint"
 
   lint.linters_by_ft = {
-    javascript = { "eslint_d" },
-    typescript = { "eslint_d" },
-    javascriptreact = { "eslint_d" },
-    typescriptreact = { "eslint_d" },
+    -- javascript = { "eslint_d" },
+    -- typescript = { "eslint_d" },
+    -- javascriptreact = { "eslint_d" },
+    -- typescriptreact = { "eslint_d" },
     cpp = { "cpplint" },
   }
 

@@ -1,6 +1,9 @@
 local add, now = MiniDeps.add, MiniDeps.now
 
 now(function()
+  add({ source = 'ellisonleao/gruvbox.nvim' })
+  vim.cmd [[colo gruvbox]]
+
   require("mini.notify").setup()
   vim.notify = require("mini.notify").make_notify()
 

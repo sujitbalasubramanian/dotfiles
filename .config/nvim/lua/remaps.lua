@@ -13,7 +13,9 @@ km("v", "K", ":m '<-2<CR>gv=gv")
 
 km("n", "H", [[:bnext<CR>]])
 km("n", "L", [[:bprev<CR>]])
-km("n", "<leader>bd", [[:bdelete<CR>]])
+km("n", "<leader>bd", [[:bdelete<cr>]])
 
-km("n", "<leader><leader>", [[:so %<CR>]])
-km("v", "<leader><leader>", [[:so<CR>]])
+km("n", "<leader>n", [[:Ex<cr>]])
+
+km("n", "<leader><leader>", [[:so %<cr>]])
+km("v", "<leader><leader>", [[:so<cr>]])

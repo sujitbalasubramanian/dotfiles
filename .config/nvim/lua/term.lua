@@ -24,10 +24,19 @@ local function create_floating_term_win(opts)
   return { buf = buf, win = win }
 end
 
+local function is_valid_term_buf(buf)
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return false
+  end
+
+  local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+  return buftype == "terminal"
+end
+
 local function open_named_terminal(name, cmd)
   local state = term_state[name]
 
-  if state == nil then
+  if state == nil or not is_valid_term_buf(state.buf) then
     term_state[name] = create_floating_term_win()
     vim.api.nvim_set_current_buf(term_state[name].buf)
     vim.fn.termopen(cmd or vim.o.shell)

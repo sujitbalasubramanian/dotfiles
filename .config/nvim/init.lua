@@ -18,4 +18,9 @@ require "tools"
 require "power-tools"
 require "syntax"
 require "notes"
-require "misc"
+
+local add, later = MiniDeps.add, MiniDeps.later
+
+later(function()
+  add { source = "vuciv/golf" }
+end)

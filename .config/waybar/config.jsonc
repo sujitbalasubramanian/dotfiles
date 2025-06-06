@@ -1,0 +1,78 @@
+// -*- mode: jsonc -*-
+{
+  // "layer": "top",
+  // "position": "bottom",
+  "height": 30, 
+  // "spacing": 0,
+  "modules-left": [
+    "sway/workspaces",
+    "sway/mode",
+    "sway/window"
+  ],
+  // "modules-center": [ ],
+  "modules-right": [
+    "network",
+    "disk",
+    "memory",
+    "cpu",
+    "temperature",
+    "backlight",
+    "battery",
+    "pulseaudio",
+    "clock",
+    "tray"
+  ],
+  "network": {
+    "format-wifi": "W: {essid} ({signalStrength}%) U:{bandwidthUpBytes} D:{bandwidthDownBytes} |",
+    "format-ethernet": "E: {ipaddr}/{cidr} U:{bandwidthUpBytes} D:{bandwidthUpBytes} |",
+    "format-linked": "{ifname} (No IP) |",
+    "format-disconnected": "Disconnected |",
+    "format-alt": "{ifname}: {ipaddr}/{cidr} |",
+  },
+  "disk": {
+    "format": "D: {specific_free:0.2f} GB |",
+    "unit": "GB"
+  },
+  "backlight": {
+    "format": "B: {percent}% |"
+  },
+  "memory": {
+    "format": "M: {used}G |"
+  },
+  "cpu": {
+    "format": "C: {usage}% |",
+  },
+  "temperature": {
+    "critical-threshold": 80,
+    "format": "T:{temperatureC}°C |",
+  },
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "BAT: {capacity}% |",
+    "format-full": "FULL: {capacity}% |",
+    "format-charging": "CHR: {capacity}% |",
+    "format-plugged": "PLG: {capacity}% |",
+  },
+  "pulseaudio": {
+    "format": "V:{volume}% {format_source}",
+    "format-bluetooth": "V:{volume}%  {format_source}",
+    "format-bluetooth-muted": "󰖁  {format_source}",
+    "format-muted": "󰖁 {format_source}",
+    "format-source": "M:{volume}% |",
+    "format-source-muted": "",
+    "on-click": "ghostty -e pulsemixer"
+  },
+  "clock": {
+    "format":"{:%d %b %y %H:%M} |",
+    "format-alt": "{:%Y-%m-%d} |",
+    "tooltip": false
+  },
+  "tray": {
+    "icon-size": 20,
+    "spacing": 10
+  },
+}

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <image-url>"
+  exit 1
+fi
+
+URL="$1"
+
+swayimg "exec://curl --silent --show-error --output - '$URL'"
+
