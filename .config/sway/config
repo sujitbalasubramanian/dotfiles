@@ -157,7 +157,7 @@ bindsym $mod+p exec $menu
 
 mode "quicklanch" {
     bindsym b exec "$BROWSER & swaymsg mode default"
-    bindsym Shift+b exec "chromium & swaymsg mode default"
+    bindsym Shift+b exec "google-chrome-stable & swaymsg mode default"
     bindsym d exec "$READER & swaymsg mode default"
     bindsym Shift+d exec "$TERMINAL -e lazydocker & swaymsg mode default"
     bindsym i exec "gimp & swaymsg mode default"
@@ -176,10 +176,11 @@ mode "quicklanch" {
 }
 bindsym $mod+o mode "quicklanch"
 
-bindsym Print exec "grim $(xdg-user-dir PICTURES)/screenshot/$(date +'%s_grim.png')"
-bindsym $mod+Print exec "grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Pictures/screenshot/$(date +%s).png"
-bindsym Shift+Print exec "grim -g $(slurp) $(xdg-user-dir PICTURES)/screenshot/$(date +'%s_grim.png')"
-bindsym Ctrl+Print exec "grim -g $(slurp) | wl-copy"
+bindsym Print exec "grim $(xdg-user-dir PICTURES)/screenshot/$(date +'%s.png')"
+bindsym Mod4+Print exec "grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Pictures/screenshot/$(date +%s).png"
+bindsym $mod+Print exec "mkdir -p $(xdg-user-dir PICTURES)/screenshot && grim -g \"$(swaymsg -t get_tree | jq -r '.. | select(.type? == \\\"con\\\" and .focused == true) | .rect | \\\"\\(.x),\\(.y) \\(.width)x\\(.height)\\\"')\" $(xdg-user-dir PICTURES)/screenshot/$(date +'%s_window.png')"
+bindsym Shift+Print exec bash -c 'slurp | grim -g - "$(xdg-user-dir PICTURES)/screenshot/$(date +%s).png"'
+bindsym Ctrl+Print exec bash -c 'slurp | grim -g - - | wl-copy'
 
 bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%

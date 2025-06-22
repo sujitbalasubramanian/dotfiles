@@ -5,7 +5,7 @@ confirm-close-surface = false
 
 shell-integration = zsh
 theme = GruvboxDarkHard
-font-size = 14
+font-size = 16
 font-family = FiraCode Nerd Font
 # background-opacity = 0.9
 

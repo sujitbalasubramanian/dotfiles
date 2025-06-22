@@ -98,6 +98,3 @@ eval "$(zoxide init zsh)"
 autoload bashcompinit
 bashcompinit
 source "/home/sujit/.local/share/bash-completion/completions/am"
-
-# bun completions
-[ -s "/home/sujit/.local/share/bun/_bun" ] && source "/home/sujit/.local/share/bun/_bun"

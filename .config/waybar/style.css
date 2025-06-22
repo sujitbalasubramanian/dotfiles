@@ -1,37 +1,37 @@
 * {
-    font-family: FiraCode Nerd Font, sans-serif;
-    font-size: 14px;
+  font-family:
+    FiraCode Nerd Font,
+    sans-serif;
+  font-size: 14px;
 }
 
 window#waybar {
-    background-color: black;
-    color: #ffffff;
+  background-color: black;
+  color: #ffffff;
 }
 
 window#waybar.hidden {
-    opacity: 0.2;
+  opacity: 0.2;
 }
 
 #workspaces button {
-    margin: 1px;
-    padding: 0 2px;
-    background-color: transparent;
-    color: #ffffff;
-    border: 1px solid grey;
-    border-radius: 0px;
+  margin: 1px;
+  padding: 0 2px;
+  border: 1px solid grey;
+  border-radius: 0px;
 }
 
 #workspaces button.focused {
-    background-color: #64727D;
+  background-color: #64727d;
 }
 
 #workspaces button.urgent {
-    background-color: #eb4d4b;
+  background-color: #eb4d4b;
 }
 
 #mode {
-    background-color: #64727D;
-    box-shadow: inset 0 -3px #ffffff;
+  background-color: #64727d;
+  box-shadow: inset 0 -3px #ffffff;
 }
 
 #network,
@@ -42,36 +42,28 @@ window#waybar.hidden {
 #backlight,
 #pulseaudio,
 #clock,
-#tray,
-#disk,
-#mode {
-    padding: 0;
-    padding-right: 5px;
-    color: #ffffff;
-}
-
-#window,
-#workspaces {
-    margin: 0 4px;
+#disk {
+  padding: 0 8px;
+  border-right: 1px solid grey;
 }
 
 @keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #000000;
-    }
+  to {
+    background-color: #ffffff;
+    color: #000000;
+  }
 }
 
 #battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: steps(12);
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+  background-color: #f53c3c;
+  color: #ffffff;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: steps(12);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 #network.disconnected {
-    color: #f53c3c;
+  color: #f53c3c;
 }

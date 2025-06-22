@@ -14,8 +14,8 @@
     "network",
     "disk",
     "memory",
-    "cpu",
-    "temperature",
+    // "cpu",
+    // "temperature",
     "backlight",
     "battery",
     "pulseaudio",
@@ -23,28 +23,28 @@
     "tray"
   ],
   "network": {
-    "format-wifi": "W: {essid} ({signalStrength}%) U:{bandwidthUpBytes} D:{bandwidthDownBytes} |",
-    "format-ethernet": "E: {ipaddr}/{cidr} U:{bandwidthUpBytes} D:{bandwidthUpBytes} |",
-    "format-linked": "{ifname} (No IP) |",
-    "format-disconnected": "Disconnected |",
-    "format-alt": "{ifname}: {ipaddr}/{cidr} |",
+    "format-wifi": "W: {essid} ({signalStrength}%) U:{bandwidthUpBytes} D:{bandwidthDownBytes}",
+    "format-ethernet": "E: {ipaddr}/{cidr} U:{bandwidthUpBytes} D:{bandwidthUpBytes}",
+    "format-linked": "{ifname} (No IP)",
+    "format-disconnected": "Disconnected",
+    "format-alt": "{ifname}: {ipaddr}/{cidr}",
   },
   "disk": {
-    "format": "D: {specific_free:0.2f} GB |",
+    "format": "D: {specific_free:0.2f} GB",
     "unit": "GB"
   },
   "backlight": {
-    "format": "B: {percent}% |"
+    "format": "B: {percent}%"
   },
   "memory": {
-    "format": "M: {used}G |"
+    "format": "M: {used}G"
   },
   "cpu": {
-    "format": "C: {usage}% |",
+    "format": "C: {usage}%",
   },
   "temperature": {
     "critical-threshold": 80,
-    "format": "T:{temperatureC}°C |",
+    "format": "T:{temperatureC}°C",
   },
   "battery": {
     "states": {
@@ -52,23 +52,23 @@
       "warning": 30,
       "critical": 15
     },
-    "format": "BAT: {capacity}% |",
-    "format-full": "FULL: {capacity}% |",
-    "format-charging": "CHR: {capacity}% |",
-    "format-plugged": "PLG: {capacity}% |",
+    "format": "BAT: {capacity}%",
+    "format-full": "FULL: {capacity}%",
+    "format-charging": "CHR: {capacity}%",
+    "format-plugged": "PLG: {capacity}%",
   },
   "pulseaudio": {
     "format": "V:{volume}% {format_source}",
     "format-bluetooth": "V:{volume}%  {format_source}",
     "format-bluetooth-muted": "󰖁  {format_source}",
     "format-muted": "󰖁 {format_source}",
-    "format-source": "M:{volume}% |",
+    "format-source": "M:{volume}%",
     "format-source-muted": "",
     "on-click": "ghostty -e pulsemixer"
   },
   "clock": {
-    "format":"{:%d %b %y %H:%M} |",
-    "format-alt": "{:%Y-%m-%d} |",
+    "format":"{:%d %b %y %H:%M}",
+    "format-alt": "{:%Y-%m-%d}",
     "tooltip": false
   },
   "tray": {

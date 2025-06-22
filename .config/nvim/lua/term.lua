@@ -3,8 +3,8 @@ local term_state = {}
 local function create_floating_term_win(opts)
   opts = opts or {}
 
-  local width = math.floor(vim.o.columns * 0.9)
-  local height = math.floor(vim.o.lines * 0.8)
+  local width = math.floor(vim.o.columns)
+  local height = math.floor(vim.o.lines)
   local row = math.floor((vim.o.lines - height) / 2)
   local col = math.floor((vim.o.columns - width) / 2)
 
@@ -15,7 +15,6 @@ local function create_floating_term_win(opts)
     height = height,
     row = row,
     col = col,
-    border = "rounded"
   }
 
   local buf = (opts.buf and vim.api.nvim_buf_is_valid(opts.buf)) and opts.buf or vim.api.nvim_create_buf(false, true)
@@ -64,7 +63,7 @@ vim.api.nvim_create_user_command("Term", function(args)
   local opts = parse_args(args.args)
 
   if not opts.name then
-    print("Usage: :Term name=myterm [cmd=lazygit]")
+    print "Usage: :Term name=myterm [cmd=lazygit]"
     return
   end
 
@@ -73,7 +72,7 @@ end, {
   nargs = "+", -- one or more args
   complete = function()
     return vim.tbl_keys(term_state)
-  end
+  end,
 })
 
 -- Normal mode keymaps
@@ -91,11 +90,11 @@ km("n", "td", ":Term name=lazydocker cmd=lazydocker<CR>", { desc = "Open LazyDoc
 local function open_term_picker()
   local items = vim.tbl_keys(term_state)
   if #items == 0 then
-    print("No terminals available.")
+    print "No terminals available."
     return
   end
 
-  require("mini.pick").start({
+  require("mini.pick").start {
     source = {
       name = "Terminals",
       items = items,
@@ -106,7 +105,7 @@ local function open_term_picker()
       end,
     },
     prompt = "Select terminal > ",
-  })
+  }
 end
 
 vim.keymap.set("n", "ts", open_term_picker, { desc = "Search and open terminal", noremap = true, silent = true })
