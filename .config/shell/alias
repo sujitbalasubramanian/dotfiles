@@ -24,12 +24,8 @@ alias yayc='yay -Yc'
 alias pacc='sudo pacman -R $(pacman -Qtdq)'
 
 # applications
-alias bc="bc -ql"
-alias cat="bat --paging=never"
+alias bat="bat -p --paging=never"
 alias fm="yazi"
-alias lzg="lazygit"
-alias lzd="lazydocker"
-alias cd="z"
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
 
 # bare repo

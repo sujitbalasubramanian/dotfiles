@@ -114,19 +114,7 @@ require("mini.surround").setup()
 
 require("mini.pick").setup()
 
-local extra = require "mini.extra"
-extra.setup()
-
-local hi_words = extra.gen_highlighter.words
-
-require("mini.hipatterns").setup {
-  highlighters = {
-    fixme = hi_words({ "FIXME", "Fixme", "fixme" }, "MiniHipatternsFixme"),
-    hack = hi_words({ "HACK", "Hack", "hack" }, "MiniHipatternsHack"),
-    todo = hi_words({ "TODO", "Todo", "todo" }, "MiniHipatternsTodo"),
-    note = hi_words({ "NOTE", "Note", "note" }, "MiniHipatternsNote"),
-  },
-}
+require("mini.extra").setup()
 
 km("n", "<leader>pf", [[:Pick files<cr>]])
 km("n", "<leader>pb", [[:Pick buffers<cr>]])
@@ -335,6 +323,7 @@ later(function()
       c = { "clang-format" },
       cpp = { "clang-format" },
       go = { "goimports", "gofmt" },
+      tex = { "tex-fmt" },
       rust = { "rustfmt", lsp_format = "fallback" },
     },
     default_format_opts = {
@@ -368,8 +357,8 @@ later(function()
     typescript = { "biomejs" },
     javascriptreact = { "biomejs" },
     typescriptreact = { "biomejs" },
-    c = { "clang-tidy" },
-    cpp = { "clang-tidy" },
+    -- c = { "clang-tidy" },
+    -- cpp = { "clang-tidy" },
     rust = { "clippy" },
   }
 
@@ -386,9 +375,6 @@ later(function()
     lint.try_lint()
   end, { desc = "Trigger linting for current file" })
 end)
-
--- lua files
-require "term"
 
 -- misc
 later(function()

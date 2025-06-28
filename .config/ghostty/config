@@ -1,12 +1,43 @@
 # vim:ft=cfg
 
 window-decoration = false
-confirm-close-surface = false
+# confirm-close-surface = false
 
 shell-integration = zsh
 theme = GruvboxDarkHard
 font-size = 16
 font-family = FiraCode Nerd Font
+font-feature = -calt, -liga, -dlig
 # background-opacity = 0.9
 
-keybind = cmd+backspace=esc:w
+gtk-tabs-location = bottom
+
+keybind = ctrl+shift+n=new_window
+
+keybind = ctrl+a>h=goto_split:left
+keybind = ctrl+a>j=goto_split:bottom
+keybind = ctrl+a>k=goto_split:top
+keybind = ctrl+a>l=goto_split:right
+
+keybind = ctrl+a>shift+h=new_split:left
+keybind = ctrl+a>shift+j=new_split:down
+keybind = ctrl+a>shift+k=new_split:up
+keybind = ctrl+a>shift+l=new_split:right
+keybind = ctrl+a>f=toggle_split_zoom
+
+keybind = ctrl+a>n=next_tab
+keybind = ctrl+a>p=previous_tab
+
+keybind = ctrl+a>c=new_tab
+keybind = ctrl+a>1=goto_tab:1
+keybind = ctrl+a>2=goto_tab:2
+keybind = ctrl+a>3=goto_tab:3
+keybind = ctrl+a>4=goto_tab:4
+keybind = ctrl+a>5=goto_tab:5
+keybind = ctrl+a>6=goto_tab:6
+keybind = ctrl+a>7=goto_tab:7
+keybind = ctrl+a>8=goto_tab:8
+keybind = ctrl+a>9=goto_tab:9
+keybind = ctrl+a>0=goto_tab:10
+
+keybind = super+r=reload_config
