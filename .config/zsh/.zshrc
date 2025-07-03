@@ -68,4 +68,3 @@ fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 # Tools
 eval "$(pyenv init -)"
-eval "$(zoxide init zsh)"

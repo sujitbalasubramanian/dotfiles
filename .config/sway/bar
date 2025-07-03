@@ -1,0 +1,22 @@
+#!/bin/sh
+
+while true; do
+  VOL=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf "%.0f%%", $2 * 100}')
+  MUTE=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo " (muted)" || echo "")
+
+  BAT=$(cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "N/A")
+  RAW_STATUS=$(cat /sys/class/power_supply/BAT0/status 2>/dev/null || echo "")
+
+  case "$RAW_STATUS" in
+    "Charging") BAT_STATUS=" CHR" ;;
+    "Discharging") BAT_STATUS="" ;;
+    "Full") BAT_STATUS=" Full" ;;
+    *) BAT_STATUS=" $RAW_STATUS" ;;
+  esac
+
+  TIME=$(date '+%d/%m %a %H:%M')
+
+  echo "V:$VOL$MUTE | B:$BAT%$BAT_STATUS | $TIME |"
+
+  sleep 1
+done

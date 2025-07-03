@@ -1,10 +1,7 @@
 ### Starups
 exec --no-startup-id dunst
-exec --no-startup-id waybar
-exec --no-startup-id nm-applet
 exec --no-startup-id fcitx5
 exec --no-startup-id dropbox
-
 exec --no-startup-id xwayland-satellite
 
 ### Globals
@@ -150,8 +147,6 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 ### Lock screen
-bindsym $mod+Shift+b exec pkill waybar || waybar
-
 bindsym $mod+Return exec $TERMINAL
 bindsym $mod+p exec $menu
 
@@ -162,14 +157,10 @@ mode "quicklanch" {
     bindsym Shift+d exec "$TERMINAL -e lazydocker & swaymsg mode default"
     bindsym i exec "gimp & swaymsg mode default"
     bindsym o exec "obs & swaymsg mode default"
-    bindsym v exec "$TERMINAL -e pulsemixer & swaymsg mode default"
-    bindsym p exec "$TERMINAL -e ncmpcpp & swaymsg mode default"
+    bindsym v exec "$TERMINAL -e wiremix & swaymsg mode default"
     bindsym e exec "$TERMINAL -e yazi & swaymsg mode default"
-    bindsym n exec "$TERMINAL -e $EDITOR & swaymsg mode default"
     bindsym Shift+n exec "$TERMINAL -e 'cd ~/Dropbox/Notes && $EDITOR index.md .' & swaymsg mode default"
-    bindsym c exec "$TERMINAL -e 'cd ~/.config && $EDITOR .' & swaymsg mode default"
     bindsym f exec "$TERMINAL -e newsboat & swaymsg mode default"
-    bindsym Shift+f exec "$TERMINAL -e podboat & swaymsg mode default"
     bindsym m exec "$TERMINAL -e neomutt & swaymsg mode default"
     bindsym g exec "$TERMINAL -e lazygit & swaymsg mode default"
     bindsym Escape mode "default"
@@ -182,20 +173,21 @@ bindsym $mod+Print exec "mkdir -p $(xdg-user-dir PICTURES)/screenshot && grim -g
 bindsym Shift+Print exec bash -c 'slurp | grim -g - "$(xdg-user-dir PICTURES)/screenshot/$(date +%s).png"'
 bindsym Ctrl+Print exec bash -c 'slurp | grim -g - - | wl-copy'
 
-bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
-bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DFAULT_SOURCE@ toggle
+
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
 bindsym Mod4+l exec waylock
 
 ### Status Bar:
-# Fixme: sway-bar tray breaking
 # Read `man 5 sway-bar` for more information about this section.
-# bar {
-#   status_command i3status
-# }
+bar {
+  position top
+  status_command ~/.config/sway/bar
+}
 
 include /etc/sway/config.d/*

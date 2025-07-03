@@ -93,8 +93,8 @@ require("oil").setup {
   watch_for_changes = false,
 }
 
--- km("n", "-", [[:Oil --preview<cr>]])
 km("n", "-", [[:Oil<cr>]])
+km("n", "<leader>-", [[:Oil<cr>]])
 
 add { source = "mbbill/undotree" }
 km("n", "<leader>u", vim.cmd.UndotreeToggle)
@@ -105,6 +105,10 @@ add { source = "MagicDuck/grug-far.nvim" }
 
 add { source = "eero-lehtinen/oklch-color-picker.nvim" }
 require("oklch-color-picker").setup {}
+
+add { source = "tpope/vim-dadbod" }
+add { source = "kristijanhusak/vim-dadbod-ui" }
+vim.g.db_ui_use_nerd_fonts = 1
 
 require("mini.pairs").setup()
 
@@ -146,6 +150,7 @@ add {
   depends = {
     "L3MON4D3/LuaSnip",
     "rafamadriz/friendly-snippets",
+    "kristijanhusak/vim-dadbod-completion",
   },
   hooks = {
     post_install = build_blink,
@@ -160,6 +165,9 @@ require("blink.cmp").setup {
   snippets = { preset = "luasnip" },
   sources = {
     default = { "lsp", "path", "snippets", "buffer" },
+    providers = {
+      dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+    },
   },
   fuzzy = { implementation = "prefer_rust_with_warning" },
 }
