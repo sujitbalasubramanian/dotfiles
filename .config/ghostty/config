@@ -6,7 +6,7 @@ window-decoration = false
 shell-integration = zsh
 theme = GruvboxDarkHard
 font-size = 16
-font-family = FiraCode Nerd Font
+font-family = Iosevka Nerd Font Mono
 font-feature = -calt, -liga, -dlig
 # background-opacity = 0.9
 

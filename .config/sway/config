@@ -7,7 +7,7 @@ exec --no-startup-id xwayland-satellite
 ### Globals
 set $mod Mod1
 
-font pango:FiraCode Nerd Font 12
+font pango:Iosevka Nerd Font 12
 for_window [class="^.*"] border pixel 2
 
 set $left h
@@ -155,13 +155,11 @@ mode "quicklanch" {
     bindsym Shift+b exec "google-chrome-stable & swaymsg mode default"
     bindsym d exec "$READER & swaymsg mode default"
     bindsym Shift+d exec "$TERMINAL -e lazydocker & swaymsg mode default"
-    bindsym i exec "gimp & swaymsg mode default"
-    bindsym o exec "obs & swaymsg mode default"
+    bindsym s exec "obs & swaymsg mode default"
     bindsym v exec "$TERMINAL -e wiremix & swaymsg mode default"
     bindsym e exec "$TERMINAL -e yazi & swaymsg mode default"
-    bindsym Shift+n exec "$TERMINAL -e 'cd ~/Dropbox/Notes && $EDITOR index.md .' & swaymsg mode default"
+    bindsym n exec "$TERMINAL -e 'cd ~/Dropbox/Notes && $EDITOR index.md .' & swaymsg mode default"
     bindsym f exec "$TERMINAL -e newsboat & swaymsg mode default"
-    bindsym m exec "$TERMINAL -e neomutt & swaymsg mode default"
     bindsym g exec "$TERMINAL -e lazygit & swaymsg mode default"
     bindsym Escape mode "default"
 }
@@ -186,7 +184,7 @@ bindsym Mod4+l exec waylock
 ### Status Bar:
 # Read `man 5 sway-bar` for more information about this section.
 bar {
-  position top
+  position bottom
   status_command ~/.config/sway/bar
 }
 

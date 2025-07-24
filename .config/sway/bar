@@ -6,7 +6,6 @@ while true; do
 
   BAT=$(cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "N/A")
   RAW_STATUS=$(cat /sys/class/power_supply/BAT0/status 2>/dev/null || echo "")
-
   case "$RAW_STATUS" in
     "Charging") BAT_STATUS=" CHR" ;;
     "Discharging") BAT_STATUS="" ;;
@@ -16,7 +15,16 @@ while true; do
 
   TIME=$(date '+%d/%m %a %H:%M')
 
-  echo "V:$VOL$MUTE | B:$BAT%$BAT_STATUS | $TIME |"
+  NET_TYPE=$(nmcli -t -f TYPE,STATE device | awk -F: '$2 == "connected" {print $1; exit}')
+  if [ "$NET_TYPE" = "wifi" ]; then
+    SSID=$(nmcli -t -f ACTIVE,SSID dev wifi | grep '^yes' | cut -d: -f2)
+    NET_LABEL="WiFi:$SSID"
+  elif [ "$NET_TYPE" = "ethernet" ]; then
+    NET_LABEL="ETH"
+  else
+    NET_LABEL="NoNet"
+  fi
 
+  echo "N:$NET_LABEL | V:$VOL$MUTE | B:$BAT%$BAT_STATUS | $TIME |"
   sleep 1
 done

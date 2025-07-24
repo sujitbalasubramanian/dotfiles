@@ -9,24 +9,9 @@ alias ls='ls --color=auto'
 alias la='ls -A'
 alias ll='ls -l'
 alias ld='ls -la'
-alias tree='tree -C'
-alias dir='dir --color=auto'
-alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
-# package manager 
-alias yayi='yay -S'
-alias yayr='yay -Rns'
-alias yayup='yay -Syu'
-alias yayc='yay -Yc'
-alias pacc='sudo pacman -R $(pacman -Qtdq)'
 
 # applications
-alias bat="bat -p --paging=never"
 alias fm="yazi"
+alias pacc='sudo pacman -R $(pacman -Qtdq)'
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
-
-# bare repo
-alias dotf='/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
