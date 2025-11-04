@@ -188,9 +188,9 @@ add {
 
 -- stylua: ignore
 local langs = {
-  "vimdoc", "bash", "lua", "c", "cpp", "make", "cmake", "rust", "zig", "go",
-  "html", "css", "javascript", "typescript", "astro", "dart", "python", "sql",
-  "toml", "xml","json", "yaml", "markdown", "markdown_inline", "latex",
+  "vimdoc", "bash", "lua", "c", "cpp", "make", "cmake", "html", "css",
+  "javascript", "typescript", "astro", "dart", "python", "sql", "json",
+  "yaml", "markdown", "markdown_inline", "latex",
 }
 
 require("nvim-treesitter.configs").setup {
@@ -254,7 +254,7 @@ later(function()
   local get_option = vim.filetype.get_option
   vim.filetype.get_option = function(filetype, option)
     return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
-      or get_option(filetype, option)
+        or get_option(filetype, option)
   end
 end)
 
@@ -267,25 +267,25 @@ add {
   },
 }
 
-require("mason").setup()
-
-local masonconfig = require "mason-lspconfig"
-
 -- stylua: ignore
 local lservers = {
   "ts_ls", "emmet_language_server", "tailwindcss", "astro", "pyright",
-  "lua_ls", "clangd", "zls", "gopls", "rust_analyzer",
+  "lua_ls", "clangd", "rust_analyzer",
 }
 
-masonconfig.setup {
+require("mason").setup()
+
+require("mason-lspconfig").setup {
   ensure_installed = lservers,
-  automatic_enable = false,
 }
 
 local capabilities = require("blink.cmp").get_lsp_capabilities()
-local lspconfig = require "lspconfig"
 
-local km = vim.keymap.set
+for _, server in ipairs(lservers) do
+  vim.lsp.config(server, {
+    capabilities = capabilities,
+  })
+end
 
 km("n", "<leader>rn", vim.lsp.buf.rename)
 km("n", "<leader>ca", vim.lsp.buf.code_action)
@@ -293,12 +293,6 @@ km("n", "[d", vim.diagnostic.goto_prev)
 km("n", "]d", vim.diagnostic.goto_next)
 km("n", "gd", vim.lsp.buf.definition)
 km("n", "gD", vim.lsp.buf.declaration)
-
-for _, server in ipairs(lservers) do
-  lspconfig[server].setup {
-    capabilities = capabilities,
-  }
-end
 
 -- lang specfic plugins
 add {
@@ -327,10 +321,8 @@ later(function()
       json = { "jq" },
       yaml = { "yq" },
       lua = { "stylua" },
-      python = { "black" },
       c = { "clang-format" },
       cpp = { "clang-format" },
-      go = { "goimports", "gofmt" },
       tex = { "tex-fmt" },
       rust = { "rustfmt", lsp_format = "fallback" },
     },
