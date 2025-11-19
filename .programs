@@ -14,8 +14,6 @@ breeze
 brightnessctl
 clang
 cmake
-cmake-format
-cmake-lint
 dbeaver
 dmidecode
 dnsmasq
@@ -61,6 +59,7 @@ ntfs-3g
 nvm
 nwg-displays
 nwg-look
+obs-studio
 openssh
 os-prober
 pipewire
@@ -92,6 +91,7 @@ texlive-fontutils
 texlive-latex
 texlive-latexextra
 texlive-latexrecommended
+tmux
 trash-cli
 tree-sitter-cli
 ttf-fira-sans

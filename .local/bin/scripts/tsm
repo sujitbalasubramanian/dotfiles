@@ -1,0 +1,80 @@
+#!/bin/bash
+
+create_session() {
+  local name=$1
+  local path=$2
+
+  if tmux has-session -t "$name" 2>/dev/null; then
+    tmux attach-session -t "$name"
+  else
+    tmux new-session -s "$name" -c "$path"
+  fi
+}
+
+get_existing_sessions() {
+  tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf
+}
+
+# Ensure an argument is provided
+if [[ -z "$1" ]]; then
+  echo "Error: No command or session name provided."
+  echo "Run: tsm help"
+  exit 1
+fi
+
+case "$1" in
+
+  create)
+    workdirs=$(find ~/work -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+    projdirs=$(find ~/project -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+
+    seldir=$(printf "%s\n%s\n" "$workdirs" "$projdirs" | fzf)
+
+    if [[ -n "$seldir" ]]; then
+      create_session "$(basename "$seldir")" "$seldir"
+    fi
+    ;;
+
+  switch)
+    session=$(get_existing_sessions)
+    [[ -n "$session" ]] && tmux switch-client -t "$session"
+    ;;
+
+  attach)
+    session=$(get_existing_sessions)
+    [[ -n "$session" ]] && tmux attach-session -t "$session"
+    ;;
+
+  here)
+    create_session "$(basename "$PWD")" "$PWD"
+    ;;
+
+  help)
+    echo ""
+    echo "Tmux Session Manager"
+    echo "--------------------"
+    echo "Usage:"
+    echo "  tsm <session-name>"
+    echo "      Create or attach to <session-name> using current directory."
+    echo ""
+    echo "  tsm create"
+    echo "      Pick a directory from ~/work or ~/project and create a session."
+    echo ""
+    echo "  tsm switch"
+    echo "      Switch to an existing tmux session."
+    echo ""
+    echo "  tsm attach"
+    echo "      Attach to an existing tmux session."
+    echo ""
+    echo "  tsm here"
+    echo "      Create/attach a session using the current directory name."
+    echo ""
+    echo "  tsm help"
+    echo "      Show this help message."
+    echo ""
+    ;;
+
+  *)
+    create_session "$1" "$PWD"
+    ;;
+esac

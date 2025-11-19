@@ -1,39 +1,7 @@
--- mini.nvim installation
-local path_package = vim.fn.stdpath "data" .. "/site/"
-local mini_path = path_package .. "pack/deps/start/mini.nvim"
-if not vim.loop.fs_stat(mini_path) then
-  vim.cmd 'echo "Installing `mini.nvim`" | redraw'
-  local clone_cmd = { "git", "clone", "--filter=blob:none", "https://github.com/echasnovski/mini.nvim", mini_path }
-  vim.fn.system(clone_cmd)
-  vim.cmd "packadd mini.nvim | helptags ALL"
-  vim.cmd 'echo "Installed `mini.nvim`" | redraw'
-end
-
-require("mini.deps").setup { path = { package = path_package } }
-local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
-
--- config starts
+-- FIXME: add hidden files support in telescope
 local o = vim.opt
 local g = vim.g
 local km = vim.keymap.set
-
--- remaps
-g.mapleader = " "
-g.localleader = "\\"
-
-km({ "n", "v" }, "<leader>y", [["+y]])
-km("n", "<leader>Y", [["+Y]])
-km("n", "<leader>P", [["+p]])
-
-km("v", "J", ":m '>+1<CR>gv=gv")
-km("v", "K", ":m '<-2<CR>gv=gv")
-
-km("n", "H", [[:bnext<CR>]])
-km("n", "L", [[:bprev<CR>]])
-km("n", "<leader>bd", [[:bdelete<cr>]])
-
-km("n", "<leader><leader>", [[:so %<cr>]])
-km("v", "<leader><leader>", [[:so<cr>]])
 
 -- settings
 o.syntax = "on"
@@ -58,7 +26,7 @@ o.wrap = false
 o.updatetime = 50
 o.colorcolumn = "80"
 o.cursorline = true
--- o.signcolumn = "yes"
+o.signcolumn = "yes"
 o.guicursor = "n-v-c:block-Cursor,i-ci:ver25"
 
 o.background = "dark"
@@ -66,319 +34,505 @@ o.background = "dark"
 g.netrw_banner = 0
 g.netrw_liststyle = 0
 
-vim.cmd [[
-let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown', 'ext': 'md'}]
-]]
+-- remaps
+g.mapleader = " "
+g.localleader = "\\"
 
--- ui config
-add { source = "ellisonleao/gruvbox.nvim" }
-vim.cmd [[colo gruvbox]]
+km({ "n", "v" }, "<leader>y", [["+y]])
+km("n", "<leader>Y", [["+Y]])
+km("n", "<leader>P", [["+p]])
 
-require("mini.notify").setup()
-vim.notify = require("mini.notify").make_notify()
+km("v", "J", ":m '>+1<CR>gv=gv")
+km("v", "K", ":m '<-2<CR>gv=gv")
 
-require("mini.icons").setup()
+km("n", "H", [[:bnext<CR>]])
+km("n", "L", [[:bprev<CR>]])
+km("n", "<leader>bd", [[:bdelete<cr>]])
 
-require("mini.statusline").setup()
+km("n", "<leader><leader>", [[:so %<cr>]])
+km("v", "<leader><leader>", [[:so<cr>]])
 
--- tools
-add { source = "stevearc/oil.nvim" }
-require("oil").setup {
-  columns = {
-    "icon",
-    "permissions",
-    "size",
-    "mtime",
-  },
-  delete_to_trash = true,
-  constrain_cursor = "editable",
-  watch_for_changes = false,
-}
+-- autocmd
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "highlight when yanking text",
+  group = vim.api.nvim_create_augroup("nvim-highlight-yank", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
 
-km("n", "-", [[:Oil<cr>]])
-km("n", "<leader>-", [[:Oil<cr>]])
-
-add { source = "mbbill/undotree" }
-km("n", "<leader>u", vim.cmd.UndotreeToggle)
-
-add { source = "vimwiki/vimwiki" }
-
-add { source = "MagicDuck/grug-far.nvim" }
-
-add { source = "eero-lehtinen/oklch-color-picker.nvim" }
-require("oklch-color-picker").setup {}
-
-add { source = "tpope/vim-dadbod" }
-add { source = "kristijanhusak/vim-dadbod-ui" }
-vim.g.db_ui_use_nerd_fonts = 1
-
-require("mini.pairs").setup()
-
-require("mini.ai").setup()
-
-add { source = "tpope/vim-surround" }
-
-require("mini.pick").setup()
-
-require("mini.extra").setup()
-
-km("n", "<leader>pf", [[:Pick files<cr>]])
-km("n", "<leader>pb", [[:Pick buffers<cr>]])
-km("n", "<leader>pg", [[:Pick grep_live<cr>]])
-
-km("n", "<leader>pe", [[:Pick diagnostic<cr>]])
-km("n", "<leader>ps", [[:Pick lsp scope="document_symbol"<cr>]])
-
--- TODO: impl hi patterns picker
-
-require("mini.git").setup()
-require("mini.diff").setup()
-
-km("n", "<leader>gd", [[:lua MiniDiff.toggle_overlay()<cr>]])
-
--- completion & snippets
-local function build_blink(params)
-  vim.notify("Building blink.cmp", vim.log.levels.INFO)
-  local obj = vim.system({ "cargo", "build", "--release" }, { cwd = params.path }):wait()
-  if obj.code == 0 then
-    vim.notify("Building blink.cmp done", vim.log.levels.INFO)
-  else
-    vim.notify("Building blink.cmp failed", vim.log.levels.ERROR)
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system { "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
   end
 end
+vim.opt.rtp:prepend(lazypath)
 
-add {
-  source = "Saghen/blink.cmp",
-  depends = {
-    "L3MON4D3/LuaSnip",
-    "rafamadriz/friendly-snippets",
-    "kristijanhusak/vim-dadbod-completion",
-  },
-  hooks = {
-    post_install = build_blink,
-    post_checkout = build_blink,
-  },
-}
-
-require("luasnip.loaders.from_vscode").lazy_load()
-
-require("blink.cmp").setup {
-  keymap = { preset = "default" },
-  snippets = { preset = "luasnip" },
-  sources = {
-    default = { "lsp", "path", "snippets", "buffer" },
-    providers = {
-      dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+require("lazy").setup {
+  spec = {
+    -- also you can add custom dir
+    -- "plugins",
+    -- ui
+    {
+      "ellisonleao/gruvbox.nvim",
+      priority = 1000,
+      config = function()
+        vim.cmd "colorscheme gruvbox"
+      end,
     },
-  },
-  fuzzy = { implementation = "prefer_rust_with_warning" },
-}
+    { "nvim-mini/mini.statusline", opts = {}, dependencies = { { "nvim-mini/mini.icons", opts = {} } } },
+    { "nvim-mini/mini.notify", opts = {} },
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+    -- tools
+    { "nvim-mini/mini.pairs", opts = {} },
+    { "nvim-mini/mini.surround", opts = {} },
+    {
+      "nvim-telescope/telescope.nvim",
+      tag = "v0.1.9",
+      lazy = false,
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      },
+      config = function()
+        require("telescope").setup {
+          defaults = require("telescope.themes").get_ivy {},
+        }
 
--- syntax highlighter
-add {
-  source = "nvim-treesitter/nvim-treesitter",
-  -- Use 'master' while monitoring updates in 'main'
-  checkout = "master",
-  monitor = "main",
-  -- Perform action after every checkout
-  hooks = {
-    post_checkout = function()
-      vim.cmd "TSUpdate"
-    end,
-  },
-}
+        local builtin = require "telescope.builtin"
 
-require("nvim-treesitter.configs").setup {
-  sync_install = false,
-  auto_install = true,
-  indent = {
-    enable = true,
-  },
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
-    disable = function(lang, buf)
-      local max_filesize = 100 * 1024 -- 100 KB
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
-        vim.notify(
-          "File larger than 100KB treesitter disabled for performance",
-          vim.log.levels.WARN,
-          { title = "Treesitter" }
-        )
-        return true
-      end
-    end,
-    additional_vim_regex_highlighting = { "markdown" },
-  },
-}
-
-add {
-  source = "nvim-treesitter/nvim-treesitter-context",
-  depends = {
-    "nvim-treesitter/nvim-treesitter",
-  },
-}
-
-require("treesitter-context").setup()
-
-later(function()
-  add {
-    source = "windwp/nvim-ts-autotag",
-    depends = {
+        km("n", "<leader>ff", builtin.find_files)
+        km("n", "<leader>fg", builtin.git_files)
+        km("n", "<leader>fh", builtin.help_tags)
+        km("n", "<leader>fw", builtin.grep_string)
+        km("n", "<leader>fl", builtin.live_grep)
+        km("n", "<leader>fb", builtin.buffers)
+        km("n", "<leader>fd", builtin.diagnostics)
+      end,
+    },
+    {
+      "mbbill/undotree",
+      keys = {
+        { "<leader>u", "<CMD>UndotreeToggle<CR>", mode = "n", desc = "Undotree" },
+      },
+    },
+    {
+      "folke/todo-comments.nvim",
+      dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+      opts = {},
+      lazy = false,
+      keys = {
+        { "<leader>tt", "<CMD>TodoTelescope<CR>", mode = "n", desc = "Todo finder" },
+      },
+    },
+    { "MagicDuck/grug-far.nvim", opts = {} },
+    -- vim wiki
+    {
+      "vimwiki/vimwiki",
+      config = function()
+        vim.cmd [[
+        let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown', 'ext': 'md'}]
+        ]]
+      end,
+    },
+    -- file management
+    {
+      "stevearc/oil.nvim",
+      dependencies = { { "nvim-mini/mini.icons", opts = {} } },
+      opts = {
+        columns = { "icon", "permissions", "size", "mtime" },
+        delete_to_trash = true,
+        constrain_cursor = "editable",
+        watch_for_changes = false,
+        default_file_explorer = false,
+      },
+      keys = {
+        { "-", "<CMD>Oil<CR>", mode = "n", desc = "Open parent directory" },
+        { "<leader>-", "<CMD>Oil<CR>", mode = "n", desc = "Open parent directory" },
+      },
+      lazy = false,
+    },
+    -- color hilighter and picker
+    {
+      "eero-lehtinen/oklch-color-picker.nvim",
+      event = "VeryLazy",
+      version = "*",
+      keys = {
+        {
+          "<leader>v",
+          function()
+            require("oklch-color-picker").pick_under_cursor()
+          end,
+          desc = "Color pick under cursor",
+        },
+      },
+      opts = {
+        highlight = {
+          style = "foreground+virtual_left",
+        },
+      },
+    },
+    -- dadbod for dbs
+    {
+      "kristijanhusak/vim-dadbod-ui",
+      dependencies = {
+        { "tpope/vim-dadbod", lazy = true },
+        { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+      },
+      cmd = {
+        "DBUI",
+        "DBUIToggle",
+        "DBUIAddConnection",
+        "DBUIFindBuffer",
+      },
+      init = function()
+        vim.g.db_ui_use_nerd_fonts = 1
+      end,
+    },
+    -- diff viewer with git support
+    {
+      "nvim-mini/mini.diff",
+      lazy = false,
+      opts = {},
+      keys = {
+        {
+          "<leader>dv",
+          function()
+            MiniDiff.toggle_overlay()
+          end,
+          desc = "Toggle Diff Overlay",
+        },
+      },
+    },
+    -- treesitter
+    {
       "nvim-treesitter/nvim-treesitter",
+      dependencies = {
+        { "nvim-treesitter/nvim-treesitter-context", opts = {} },
+        {
+          "JoosepAlviste/nvim-ts-context-commentstring",
+          config = function()
+            require("ts_context_commentstring").setup {
+              enable_autocmd = false,
+            }
+            local get_option = vim.filetype.get_option
+            vim.filetype.get_option = function(filetype, option)
+              return option == "commentstring"
+                  and require("ts_context_commentstring.internal").calculate_commentstring()
+                or get_option(filetype, option)
+            end
+          end,
+        },
+        { "windwp/nvim-ts-autotag", opts = {} },
+      },
+      branch = "main",
+      lazy = false,
+      build = ":TSUpdate",
+      opts = {
+        ensure_installed = {},
+        ignore_install = {},
+        sync_install = false,
+        auto_install = true,
+        indent = {
+          enable = true,
+        },
+        highlight = {
+          -- `false` will disable the whole extension
+          enable = true,
+          disable = function(lang, buf)
+            local max_filesize = 100 * 1024 -- 100 KB
+            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            if ok and stats and stats.size > max_filesize then
+              vim.notify(
+                "File larger than 100KB treesitter disabled for performance",
+                vim.log.levels.WARN,
+                { title = "Treesitter" }
+              )
+              return true
+            end
+          end,
+          additional_vim_regex_highlighting = { "markdown" },
+        },
+      },
     },
-  }
-
-  require("nvim-ts-autotag").setup()
-end)
-
-later(function()
-  add {
-    source = "JoosepAlviste/nvim-ts-context-commentstring",
-    depends = {
-      "nvim-treesitter/nvim-treesitter",
+    -- completion & snips
+    {
+      "L3MON4D3/LuaSnip",
+      version = "2.*",
+      run = "make install_jsregexp",
+      dependencies = {
+        {
+          "rafamadriz/friendly-snippets",
+          config = function()
+            require("luasnip.loaders.from_vscode").lazy_load()
+          end,
+        },
+      },
+      opts = {},
     },
-  }
+    {
+      "saghen/blink.cmp",
+      version = "1.*",
+      dependencies = {
+        "rafamadriz/friendly-snippets",
+        "kristijanhusak/vim-dadbod-completion",
+      },
+      opts = {
+        appearance = { nerd_font_variant = "mono" },
+        keymap = { preset = "default" },
+        snippets = { preset = "luasnip" },
+        completion = {
+          documentation = { auto_show = false },
+        },
+        sources = {
+          default = { "lsp", "path", "snippets", "buffer" },
+          per_filetype = {
+            sql = { "snippets", "dadbod", "buffer" },
+          },
+          providers = {
+            dadbod = {
+              name = "Dadbod",
+              module = "vim_dadbod_completion.blink",
+            },
+          },
+        },
+        fuzzy = {
+          implementation = "prefer_rust_with_warning",
+        },
+      },
+      opts_extend = { "sources.default" },
+    },
+    -- lsp config
+    {
+      "neovim/nvim-lspconfig",
+      dependencies = {
+        { "mason-org/mason.nvim", opts = {} },
+        "mason-org/mason-lspconfig.nvim",
+        "saghen/blink.cmp",
+      },
+      config = function()
+        vim.api.nvim_create_autocmd("LspAttach", {
+          group = vim.api.nvim_create_augroup("nvim-lsp-attach", { clear = true }),
+          callback = function(event)
+            local map = function(keys, func, desc, mode)
+              mode = mode or "n"
+              vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+            end
 
-  require("ts_context_commentstring").setup {
-    enable_autocmd = false,
-  }
+            local builtin = require "telescope.builtin"
 
-  local get_option = vim.filetype.get_option
-  vim.filetype.get_option = function(filetype, option)
-    return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
-        or get_option(filetype, option)
-  end
-end)
+            map("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
+            map("gr", builtin.lsp_references, "[G]oto [R]eferences")
+            map("gt", builtin.lsp_type_definitions, "[G]oto [T]ype Definition")
+            map("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
+            map("<leader>ds", builtin.lsp_document_symbols, "Open Document Symbols")
+            map("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
 
--- lsp config
-add {
-  source = "mason-org/mason-lspconfig.nvim",
-  depends = {
-    "mason-org/mason.nvim",
-    "neovim/nvim-lspconfig",
+            map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+            map("K", vim.lsp.buf.hover, "Hover Documentation")
+            map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+            map("<leader>ca", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+
+            local client = vim.lsp.get_client_by_id(event.data.client_id)
+            local bufnr = event.buf
+
+            if client and client.server_capabilities.documentHighlightProvider then
+              local highlight_augroup = vim.api.nvim_create_augroup("nvim-lsp-highlight", { clear = false })
+
+              vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                buffer = bufnr,
+                group = highlight_augroup,
+                callback = function()
+                  vim.lsp.buf.document_highlight()
+                end,
+              })
+
+              vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                buffer = bufnr,
+                group = highlight_augroup,
+                callback = function()
+                  vim.lsp.buf.clear_references()
+                end,
+              })
+
+              vim.api.nvim_create_autocmd("LspDetach", {
+                group = vim.api.nvim_create_augroup("nvim-lsp-detach", { clear = true }),
+                callback = function(event2)
+                  vim.lsp.buf.clear_references()
+                  vim.api.nvim_clear_autocmds {
+                    group = "nvim-lsp-highlight",
+                    buffer = event2.buf,
+                  }
+                end,
+              })
+            end
+
+            if client then
+              map("<leader>th", function()
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+              end, "[T]oggle Inlay [H]ints")
+            end
+          end,
+        })
+
+        vim.diagnostic.config {
+          severity_sort = true,
+          float = { border = "rounded", source = "if_many" },
+          underline = { severity = vim.diagnostic.severity.ERROR },
+          signs = {
+            text = {
+              [vim.diagnostic.severity.ERROR] = "󰅚 ",
+              [vim.diagnostic.severity.WARN] = "󰀪 ",
+              [vim.diagnostic.severity.INFO] = "󰋽 ",
+              [vim.diagnostic.severity.HINT] = "󰌶 ",
+            },
+          },
+          virtual_text = {
+            source = "if_many",
+            spacing = 2,
+            format = function(diagnostic)
+              local diagnostic_message = {
+                [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                [vim.diagnostic.severity.WARN] = diagnostic.message,
+                [vim.diagnostic.severity.INFO] = diagnostic.message,
+                [vim.diagnostic.severity.HINT] = diagnostic.message,
+              }
+              return diagnostic_message[diagnostic.severity]
+            end,
+          },
+        }
+
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+        local servers = {
+          clangd = {},
+          gopls = {},
+          pyright = {},
+          rust_analyzer = {},
+          ts_ls = {},
+          lua_ls = {},
+        }
+
+        local ensure_installed = vim.tbl_keys(servers or {})
+
+        vim.list_extend(ensure_installed, {
+          "stylua",
+        })
+
+        require("mason-lspconfig").setup {
+          ensure_installed = ensure_installed,
+          automatic_installation = false,
+          handlers = {
+            function(server_name)
+              local server = servers[server_name] or {}
+              server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+              require("lspconfig")[server_name].setup(server)
+            end,
+          },
+        }
+      end,
+    },
+    {
+      "folke/lazydev.nvim",
+      ft = "lua",
+      opts = {
+        library = {
+          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        },
+      },
+    },
+    {
+      "nvim-flutter/flutter-tools.nvim",
+      lazy = false,
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+      },
+      config = true,
+    },
+    -- formatter
+    {
+      "stevearc/conform.nvim",
+      event = "BufWritePre",
+      opts = {
+        formatters_by_ft = {
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          javascriptreact = { "prettier" },
+          typescriptreact = { "prettier" },
+          css = { "prettier" },
+          html = { "prettier" },
+          json = { "jq" },
+          yaml = { "yq" },
+          lua = { "stylua" },
+          c = { "clang_format" },
+          cpp = { "clang_format" },
+          tex = { "texfmt" },
+          go = { "gofmt", "goimports" },
+          rust = { "rustfmt", lsp_format = "fallback" },
+          python = { "black" },
+          dockerfile = { "dockerfmt" },
+          sql = { "sqlfluff" },
+        },
+        default_format_opts = {
+          lsp_format = "fallback",
+        },
+        format_on_save = {
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 500,
+        },
+      },
+      keys = {
+        {
+          "<leader>F",
+          function()
+            require("conform").format { lsp_fallback = true, timeout_ms = 1000, async = false }
+          end,
+          desc = "Format file or range (in visual mode)",
+        },
+      },
+    },
+    -- linting
+    {
+      "mfussenegger/nvim-lint",
+      event = { "BufReadPre", "BufNewFile" },
+      config = function()
+        local lint = require "lint"
+
+        lint.linters_by_ft = {
+          c = { "clangtidy" },
+          cpp = { "clangtidy" },
+          go = { "golangcilint" },
+          rust = { "clippy" },
+          python = { "pylint" },
+        }
+
+        vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+          group = vim.api.nvim_create_augroup("lint", { clear = true }),
+          callback = function()
+            local ft = vim.bo.filetype
+            if lint.linters_by_ft[ft] then
+              lint.try_lint()
+            end
+          end,
+        })
+
+        vim.keymap.set("n", "<leader>l", function()
+          lint.try_lint()
+        end, { desc = "Trigger linting for current file" })
+      end,
+    },
+    -- misc
+    "vuciv/golf",
   },
 }
-
--- stylua: ignore
-local lservers = {
-  "ts_ls", "emmet_language_server", "tailwindcss", "astro", "pyright",
-  "lua_ls", "clangd", "rust_analyzer", "gopls", "sqls"
-}
-
-require("mason").setup()
-
-require("mason-lspconfig").setup {
-  ensure_installed = lservers,
-}
-
-local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-for _, server in ipairs(lservers) do
-  vim.lsp.config(server, {
-    capabilities = capabilities,
-  })
-end
-
-km("n", "<leader>rn", vim.lsp.buf.rename)
-km("n", "<leader>ca", vim.lsp.buf.code_action)
-km("n", "[d", vim.diagnostic.goto_prev)
-km("n", "]d", vim.diagnostic.goto_next)
-km("n", "gd", vim.lsp.buf.definition)
-km("n", "gD", vim.lsp.buf.declaration)
-
--- lang specfic plugins
-add {
-  source = "nvim-flutter/flutter-tools.nvim",
-  depends = {
-    "nvim-lua/plenary.nvim",
-  },
-}
-require("flutter-tools").setup {}
-
--- formatter
-later(function()
-  add {
-    source = "stevearc/conform.nvim",
-  }
-  local conform = require "conform"
-
-  conform.setup {
-    formatters_by_ft = {
-      javascript      = { "prettier" },
-      typescript      = { "prettier" },
-      javascriptreact = { "prettier" },
-      typescriptreact = { "prettier" },
-      css             = { "prettier" },
-      html            = { "prettier" },
-      json            = { "jq" },
-      yaml            = { "yq" },
-      lua             = { "stylua" },
-      c               = { "clang_format" },
-      cpp             = { "clang_format" },
-      tex             = { "texfmt" },
-      go              = { "gofmt", "goimports" },
-      rust            = { "rustfmt", lsp_format = "fallback" },
-      python          = { "black" },
-      cmake           = { "cmake_format" },
-      dockerfile      = { "dockerfmt" },
-      sql             = { "sqlfluff" }
-    },
-    default_format_opts = {
-      lsp_format = "fallback",
-    },
-    format_on_save = {
-      lsp_fallback = true,
-      async = false,
-      timeout_ms = 500,
-    },
-  }
-
-  vim.keymap.set({ "n", "v" }, "<leader>f", function()
-    conform.format {
-      lsp_fallback = true,
-      async = false,
-      timeout_ms = 1000,
-    }
-  end, { desc = "Format file or range (in visual mode)" })
-end)
-
--- linter
-later(function()
-  add {
-    source = "mfussenegger/nvim-lint",
-  }
-  local lint = require "lint"
-
-  lint.linters_by_ft = {
-    c      = { "clangtidy" },
-    cpp    = { "clangtidy" },
-    go     = { "golangcilint" },
-    rust   = { "clippy" },
-    python = { "pylint" },
-    -- javascript      = { "eslint_d" },
-    -- typescript      = { "eslint_d" },
-    -- javascriptreact = { "eslint_d" },
-    -- typescriptreact = { "eslint_d" },
-    cmake  = { "cmakelint" },
-  }
-
-  local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-    group = lint_augroup,
-    callback = function()
-      lint.try_lint()
-    end,
-  })
-
-  vim.keymap.set("n", "<leader>l", function()
-    lint.try_lint()
-  end, { desc = "Trigger linting for current file" })
-end)
-
--- misc
-later(function()
-  add { source = "vuciv/golf" }
-end)

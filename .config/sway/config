@@ -150,12 +150,10 @@ bindsym $mod+p exec "wmenu-run -f 'FiraCode Nerd Font 10'"
 mode "quicklanch" {
     bindsym b exec "google-chrome-stable & swaymsg mode default"
     bindsym z exec "$READER & swaymsg mode default"
-    bindsym d exec "$TERMINAL -e lazydocker & swaymsg mode default"
     bindsym s exec "obs & swaymsg mode default"
     bindsym v exec "$TERMINAL -e wiremix & swaymsg mode default"
     bindsym e exec "$TERMINAL -e yazi & swaymsg mode default"
     bindsym n exec "$TERMINAL -e bash -ic 'cd \"$HOME/Dropbox/Notes\" && $EDITOR index.md' & swaymsg mode default"
-    bindsym g exec "$TERMINAL -e lazygit & swaymsg mode default"
     bindsym Escape mode "default"
 }
 bindsym $mod+o mode "quicklanch"

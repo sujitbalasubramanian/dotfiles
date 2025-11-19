@@ -1,79 +1,97 @@
 #!/bin/sh
 
 notify_pipe() {
-    read notification
-    notify-send "$notification"
+  read notification
+  notify-send "$notification"
 }
 
-disk() {
-    case $mode in 
-        "mount")
-            mount=$(lsblk -l -o NAME,LABEL,TYPE,MOUNTPOINT | \
-                    awk '/[part|disk] $/ {print $1 ": " $2}' | \
-                    wmenu -i -p "select disk: " | cut -d':' -f 1)
-            [ ! -z $mount ] && notify-send "$(udisksctl mount -b "/dev/$mount")"
-            ;;
-        "unmount")
-            unmount=$(lsblk -l -o NAME,LABEL,TYPE,MOUNTPOINT |  \
-                      awk '/[part|disk] \/.*$/ {print $1 ": " $2}' | \
-                      wmenu -i -p "select disk: " | cut -d ':' -f 1)
-            [ ! -z $unmount ] && notify-send "$(udisksctl unmount -f --no-user-interaction -b "/dev/$unmount")"
-            ;;
-        *)
-            notify-send "invalid mode";;
-    esac
+error() {
+  notify-send "Error: $1"
+  exit 1
 }
 
-phone() {
-    phone=$(gio mount -li | grep activation_root | cut -d= -f2 | wmenu -p "select phone:")
-
-    if [ -z $phone ]; then
-        notify-send "select devices"
-        exit -1
-    fi
-
-    case $mode in 
-        "mount")
-            gio mount $phone 2>&1 | notify_pipe
-            ;;
-        "unmount")
-            gio mount -u $phone 2>&1 | notify_pipe
-            ;;
-        *)
-            notify-send "invalid mode";;
-    esac
+check_cmd() {
+  command -v "$1" >/dev/null || error "$1 is not installed"
 }
 
-while getopts ":m:u:" opt ; do
-    case $opt in
-        m) 
-            mode="mount"
-            device=$OPTARG
-            ;;
-        u)
-            mode="unmount"
-            device=$OPTARG
-            ;;
-        \?) echo "invalid option  -$OPTARG" >&2 
-            exit -1;;
-    esac
-done
 
-case $device in
-    "disk")
-        if ! [ -x "$(command -v udisksctl)" ]; then
-            notify-send "Error: udisksctl is not installed."
-            exit -1
-        fi
-        disk
-        ;;
-    "phone")
-        if ! [ -x "$(command -v gio)" ]; then
-            notify-send "Error: gio is not installed."
-            exit -1
-        fi
-        phone
-        ;;
+disk_action() {
+  mode="$1"
+  case $mode in 
+    "mount")
+      mount=$(lsblk -l -o NAME,LABEL,TYPE,MOUNTPOINT | \
+        awk '/[part|disk] $/ {print $1 ": " $2}' | \
+        wmenu -i -p "select disk: " | cut -d':' -f 1)
+      [ ! -z $mount ] && notify-send "$(udisksctl mount -b "/dev/$mount")"
+      ;;
+    "unmount")
+      unmount=$(lsblk -l -o NAME,LABEL,TYPE,MOUNTPOINT |  \
+        awk '/[part|disk] \/.*$/ {print $1 ": " $2}' | \
+        wmenu -i -p "select disk: " | cut -d ':' -f 1)
+      [ ! -z $unmount ] && notify-send "$(udisksctl unmount -f --no-user-interaction -b "/dev/$unmount")"
+      ;;
     *)
-        notify-send "Invalid device";;
+      error "Invalid disk command";;
+  esac
+}
+
+phone_action() {
+  mode="$1"
+
+  phone=$(gio mount -li | grep activation_root | cut -d= -f2 | \
+    wmenu -p "Select phone:")
+
+  [ -z "$phone" ] && error "No phone selected"
+
+  case "$mode" in
+    mount)
+      gio mount "$phone" 2>&1 | notify_pipe
+      ;;
+    unmount)
+      gio mount -u "$phone" 2>&1 | notify_pipe
+      ;;
+    *)
+      error "Invalid phone command"
+      ;;
+  esac
+}
+
+# ---- HELP ----
+print_help() {
+  echo ""
+  echo "Mounter"
+  echo "--------------"
+  echo "Usage:"
+  echo "  mounter disk mount"
+  echo "  mounter disk unmount"
+  echo "      Manage disks using udisksctl."
+  echo ""
+  echo "  mounter phone mount"
+  echo "  mounter phone unmount"
+  echo "      Manage MTP phones using gio."
+  echo ""
+  echo "  mounter help"
+  echo ""
+}
+
+[ -z "$1" ] && error "No device specified. Use: mounter help"
+device="$1"
+
+case "$device" in
+  disk)
+    [ -z "$2" ] && error "No action specified. Use: mounter help"
+    check_cmd udisksctl
+    disk_action $2
+    ;;
+  phone)
+    [ -z "$2" ] && error "No action specified. Use: mounter help"
+    check_cmd gio
+    phone_action $2
+    ;;
+  help)
+    print_help
+    ;;
+  *)
+    error "Invalid device. Use: mounter help"
+    ;;
 esac
