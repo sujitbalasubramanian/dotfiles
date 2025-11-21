@@ -20,7 +20,7 @@ seat * hide_cursor when-typing enable
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg ~/.config/wall fill
+output * bg /usr/share/backgrounds/archlinux/simple.png fill
 #
 # Example configuration:
 #
@@ -165,6 +165,7 @@ bindsym Mod4+Print exec "grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(
 bindsym $mod+Print exec "mkdir -p $(xdg-user-dir PICTURES)/screenshot && grim -g \"$(swaymsg -t get_tree | jq -r '.. | select(.type? == \\\"con\\\" and .focused == true) | .rect | \\\"\\(.x),\\(.y) \\(.width)x\\(.height)\\\"')\" $(xdg-user-dir PICTURES)/screenshot/$(date +'%s_window.png')"
 bindsym Shift+Print exec bash -c 'slurp | grim -g - "$(xdg-user-dir PICTURES)/screenshot/$(date +%s).png"'
 bindsym Ctrl+Print exec bash -c 'slurp | grim -g - - | wl-copy'
+bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d ' ' -f 4 | wl-copy
 
 bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-

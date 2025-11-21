@@ -54,6 +54,8 @@ export VIDEO="mpv"
 export IMAGE="swayimg"
 export OPENER="xdg-open"
 
+export QT_QPA_PLATFORMTHEME=qt6ct
+
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude .cache"
 
 [ "$(tty)" = "/dev/tty1" ] && exec sway

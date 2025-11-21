@@ -17,7 +17,7 @@
 ################################################################################
 [general]
 # Mode at startup (viewer/gallery)
-mode = viewer
+mode = gallery
 # Window position (parent or absolute coordinates, e.g. 100,200)
 position = parent
 # Window size (fullscreen/parent/image, or absolute size, e.g. 800,600)
@@ -185,7 +185,6 @@ i = info
 Shift+Delete = exec rm -f '%' && echo "File removed: %"; skip_file
 Escape = exit
 q = exit
-Ctrl+w = exec ln -sf '%' ~/.config/wall && sway reload
 # Mouse related
 ScrollLeft = step_right 5
 ScrollRight = step_left 5
@@ -221,7 +220,6 @@ i = info
 Shift+Delete = exec rm -f '%' && echo "File removed: %"; skip_file
 Escape = exit
 q = exit
-Ctrl+w = exec ln -sf '%' ~/.config/wall && sway reload
 # Mouse related
 ScrollLeft = step_right
 ScrollRight = step_left

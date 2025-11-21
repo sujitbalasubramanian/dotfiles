@@ -1,3 +1,4 @@
+-- mini.nvim installation
 local path_package = vim.fn.stdpath "data" .. "/site/"
 local mini_path = path_package .. "pack/deps/start/mini.nvim"
 if not vim.loop.fs_stat(mini_path) then
@@ -11,6 +12,7 @@ end
 require("mini.deps").setup { path = { package = path_package } }
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
+-- config starts
 local o = vim.opt
 local g = vim.g
 local km = vim.keymap.set
@@ -114,7 +116,7 @@ require("mini.pairs").setup()
 
 require("mini.ai").setup()
 
-require("mini.surround").setup()
+add { source = "tpope/vim-surround" }
 
 require("mini.pick").setup()
 
@@ -186,15 +188,7 @@ add {
   },
 }
 
--- stylua: ignore
-local langs = {
-  "vimdoc", "bash", "lua", "c", "cpp", "make", "cmake", "html", "css",
-  "javascript", "typescript", "astro", "dart", "python", "sql", "json",
-  "yaml", "markdown", "markdown_inline", "latex",
-}
-
 require("nvim-treesitter.configs").setup {
-  ensure_installed = langs,
   sync_install = false,
   auto_install = true,
   indent = {
@@ -270,7 +264,7 @@ add {
 -- stylua: ignore
 local lservers = {
   "ts_ls", "emmet_language_server", "tailwindcss", "astro", "pyright",
-  "lua_ls", "clangd", "rust_analyzer",
+  "lua_ls", "clangd", "rust_analyzer", "gopls", "sqls"
 }
 
 require("mason").setup()
@@ -312,19 +306,24 @@ later(function()
 
   conform.setup {
     formatters_by_ft = {
-      javascript = { "biome-check" },
-      typescript = { "biome-check" },
-      javascriptreact = { "biome-check" },
-      typescriptreact = { "biome-check" },
-      css = { "biome-check" },
-      html = { "biome-check" },
-      json = { "jq" },
-      yaml = { "yq" },
-      lua = { "stylua" },
-      c = { "clang-format" },
-      cpp = { "clang-format" },
-      tex = { "tex-fmt" },
-      rust = { "rustfmt", lsp_format = "fallback" },
+      javascript      = { "prettier" },
+      typescript      = { "prettier" },
+      javascriptreact = { "prettier" },
+      typescriptreact = { "prettier" },
+      css             = { "prettier" },
+      html            = { "prettier" },
+      json            = { "jq" },
+      yaml            = { "yq" },
+      lua             = { "stylua" },
+      c               = { "clang_format" },
+      cpp             = { "clang_format" },
+      tex             = { "texfmt" },
+      go              = { "gofmt", "goimports" },
+      rust            = { "rustfmt", lsp_format = "fallback" },
+      python          = { "black" },
+      cmake           = { "cmake_format" },
+      dockerfile      = { "dockerfmt" },
+      sql             = { "sqlfluff" }
     },
     default_format_opts = {
       lsp_format = "fallback",
@@ -353,13 +352,16 @@ later(function()
   local lint = require "lint"
 
   lint.linters_by_ft = {
-    javascript = { "biomejs" },
-    typescript = { "biomejs" },
-    javascriptreact = { "biomejs" },
-    typescriptreact = { "biomejs" },
-    -- c = { "clang-tidy" },
-    -- cpp = { "clang-tidy" },
-    rust = { "clippy" },
+    c      = { "clangtidy" },
+    cpp    = { "clangtidy" },
+    go     = { "golangcilint" },
+    rust   = { "clippy" },
+    python = { "pylint" },
+    -- javascript      = { "eslint_d" },
+    -- typescript      = { "eslint_d" },
+    -- javascriptreact = { "eslint_d" },
+    -- typescriptreact = { "eslint_d" },
+    cmake  = { "cmakelint" },
   }
 
   local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
