@@ -44,7 +44,7 @@ export PATH=$HOME/.local/bin/scripts:$PATH
 # programs
 export TERM="xterm-256color"
 export COLORTERM="truecolor"
-export TERMINAL="ghostty"
+export TERMINAL="footclient"
 export BROWSER="zen-browser"
 export EDITOR="nvim"
 export VISUAL="nvim"

@@ -318,6 +318,7 @@ require("lazy").setup {
       dependencies = {
         { "mason-org/mason.nvim", opts = {} },
         "mason-org/mason-lspconfig.nvim",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
         "saghen/blink.cmp",
       },
       config = function()
@@ -427,10 +428,22 @@ require("lazy").setup {
 
         vim.list_extend(ensure_installed, {
           "stylua",
+          "prettier",
+          "goimports",
+          "tex-fmt",
+          "sqlfmt",
+          "black",
+          "sqlfluff",
+          "golangci-lint",
+          "pylint",
         })
 
-        require("mason-lspconfig").setup {
+        require("mason-tool-installer").setup {
           ensure_installed = ensure_installed,
+        }
+
+        require("mason-lspconfig").setup {
+          ensure_installed = {},
           automatic_installation = false,
           handlers = {
             function(server_name)
@@ -472,16 +485,16 @@ require("lazy").setup {
           css = { "prettier" },
           html = { "prettier" },
           json = { "jq" },
-          yaml = { "yq" },
+          yaml = { "yamlfmt" },
           lua = { "stylua" },
           c = { "clang_format" },
           cpp = { "clang_format" },
-          tex = { "texfmt" },
+          tex = { "tex-fmt" },
           go = { "gofmt", "goimports" },
           rust = { "rustfmt", lsp_format = "fallback" },
           python = { "black" },
           dockerfile = { "dockerfmt" },
-          sql = { "sqlfluff" },
+          sql = { "sqlfmt" },
         },
         default_format_opts = {
           lsp_format = "fallback",
@@ -515,6 +528,7 @@ require("lazy").setup {
           go = { "golangcilint" },
           rust = { "clippy" },
           python = { "pylint" },
+          sql = { "sqlfluff" },
         }
 
         vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {

@@ -3,6 +3,7 @@ exec --no-startup-id dunst
 exec --no-startup-id fcitx5
 exec --no-startup-id dropbox
 exec --no-startup-id xwayland-satellite
+exec --no-startup-id foot --server
 
 ### Globals
 set $mod Mod1
