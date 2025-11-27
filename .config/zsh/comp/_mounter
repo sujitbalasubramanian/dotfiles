@@ -1,0 +1,31 @@
+#compdef mounter
+
+_mounter() {
+  local -a devices actions
+
+  devices=(disk phone help)
+  actions=(mount unmount)
+
+  # First argument: device
+  if (( CURRENT == 2 )); then
+    compadd -- $devices
+    return
+  fi
+
+  # Second argument: action (only for disk/phone)
+  if (( CURRENT == 3 )); then
+    case "$words[2]" in
+      disk|phone)
+        compadd -- $actions
+        ;;
+      *)
+        # no completion for "help" or invalid device
+        ;;
+    esac
+    return
+  fi
+
+  # No further arguments supported by the script
+}
+
+_mounter "$@"

@@ -15,6 +15,10 @@ zstyle ':vcs_info:git:*' formats ' g:(%b)'
 setopt prompt_subst
 PS1='%B%{$fg[blue]%}%1d%{$fg[yellow]%}${vcs_info_msg_0_}%{$reset_color%}~> %b'
 
+# Custom functions
+fpath+=(${ZDOTDIR:-~}/.zsh_functions)
+fpath+=(${ZDOTDIR:-~}/comp)
+
 # Completion
 autoload -U compinit
 zmodload zsh/complist
@@ -56,9 +60,6 @@ if command -v fzf >/dev/null; then
     source /usr/share/fzf/completion.zsh
     source /usr/share/fzf/key-bindings.zsh
 fi
-
-# Custom functions
-fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 # External configs
 [[ -f "$XDG_CONFIG_HOME/shell/alias" ]] && source "$XDG_CONFIG_HOME/shell/alias"

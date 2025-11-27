@@ -24,7 +24,7 @@ fi
 
 case "$1" in
 
-  create)
+  ws)
     workdirs=$(find ~/work -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
     projdirs=$(find ~/project -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
 
@@ -40,11 +40,6 @@ case "$1" in
     [[ -n "$session" ]] && tmux switch-client -t "$session"
     ;;
 
-  attach)
-    session=$(get_existing_sessions)
-    [[ -n "$session" ]] && tmux attach-session -t "$session"
-    ;;
-
   here)
     create_session "$(basename "$PWD")" "$PWD"
     ;;
@@ -55,19 +50,16 @@ case "$1" in
     echo "--------------------"
     echo "Usage:"
     echo "  tsm <session-name>"
-    echo "      Create or attach to <session-name> using current directory."
+    echo "      Create a <session-name> using current directory or if <session-name> exist will attach to that session."
     echo ""
-    echo "  tsm create"
+    echo "  tsm here"
+    echo "      Create/attach a session using the current directory name."
+    echo ""
+    echo "  tsm ws"
     echo "      Pick a directory from ~/work or ~/project and create a session."
     echo ""
     echo "  tsm switch"
     echo "      Switch to an existing tmux session."
-    echo ""
-    echo "  tsm attach"
-    echo "      Attach to an existing tmux session."
-    echo ""
-    echo "  tsm here"
-    echo "      Create/attach a session using the current directory name."
     echo ""
     echo "  tsm help"
     echo "      Show this help message."

@@ -1,0 +1,25 @@
+#compdef tsm
+
+_tsm() {
+  local -a subcommands sessions
+
+  # Simple list of subcommands
+  subcommands=(
+    ws
+    switch
+    here
+    help
+  )
+
+  # Get existing tmux sessions (one per line → array)
+  sessions=("${(@f)$(tmux list-sessions -F '#{session_name}' 2>/dev/null)}")
+
+  # We're completing the *first argument* to tsm
+  if (( CURRENT == 2 )); then
+    compadd -- $subcommands $sessions
+  else
+    _message 'no more arguments'
+  fi
+}
+
+_tsm "$@"
