@@ -7,11 +7,12 @@ alias mv='mv -iv'
 #color
 alias ls='ls --color=auto'
 alias la='ls -A'
-alias ll='ls -l'
 alias ld='ls -la'
 alias grep='grep --color=auto'
 
+# package manager
+alias pacc='sudo pacman -R $(pacman -Qtdq)'
+
 # applications
 alias fm="yazi"
-alias pacc='sudo pacman -R $(pacman -Qtdq)'
 [ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"

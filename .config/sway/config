@@ -149,7 +149,7 @@ bindsym $mod+Return exec $TERMINAL
 bindsym $mod+p exec "wmenu-run -f 'FiraCode Nerd Font 10'"
 
 mode "quicklanch" {
-    bindsym b exec "google-chrome-stable & swaymsg mode default"
+    bindsym b exec "$BROWSER" & swaymsg mode default"
     bindsym z exec "$READER & swaymsg mode default"
     bindsym s exec "obs & swaymsg mode default"
     bindsym v exec "$TERMINAL -e wiremix & swaymsg mode default"

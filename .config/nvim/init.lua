@@ -422,6 +422,10 @@ require("lazy").setup {
           rust_analyzer = {},
           ts_ls = {},
           lua_ls = {},
+          astro = {},
+          tailwindcss = {},
+          emmet_ls = {},
+          cssls = {},
         }
 
         local ensure_installed = vim.tbl_keys(servers or {})
@@ -436,6 +440,7 @@ require("lazy").setup {
           "sqlfluff",
           "golangci-lint",
           "pylint",
+          "eslint_d",
         })
 
         require("mason-tool-installer").setup {
@@ -484,8 +489,9 @@ require("lazy").setup {
           typescriptreact = { "prettier" },
           css = { "prettier" },
           html = { "prettier" },
+          astro = { "prettier" },
           json = { "jq" },
-          yaml = { "yamlfmt" },
+          yaml = { "prettier" },
           lua = { "stylua" },
           c = { "clang_format" },
           cpp = { "clang_format" },
@@ -523,6 +529,11 @@ require("lazy").setup {
         local lint = require "lint"
 
         lint.linters_by_ft = {
+          javascript = { "eslint_d" },
+          typescript = { "eslint_d" },
+          javascriptreact = { "eslint_d" },
+          typescriptreact = { "eslint_d" },
+          css = { "prettier" },
           c = { "clangtidy" },
           cpp = { "clangtidy" },
           go = { "golangcilint" },

@@ -17,12 +17,12 @@ dbeaver
 dmidecode
 dnsmasq
 docker
+docker-buildx
 docker-compose
 dropbox
 dropbox-cli
 dunst
 efibootmgr
-emscripten
 fastfetch
 fcitx5
 fcitx5-configtool
@@ -44,6 +44,7 @@ lazydocker
 lazygit
 libappindicator
 libreoffice-fresh
+libunwind
 libvirt
 linux
 linux-firmware
@@ -54,6 +55,9 @@ mpv
 neovim
 networkmanager
 ninja
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
 ntfs-3g
 nvm
 nwg-displays
@@ -72,7 +76,6 @@ pyenv-virtualenv
 qemu-desktop
 qt6ct
 qtcreator
-raylib
 ripgrep
 rustup
 slurp
@@ -109,7 +112,6 @@ xdg-desktop-portal-wlr
 xdg-user-dirs
 xwayland-satellite
 yay-bin
-yay-bin-debug
 yazi
 yq
 zathura-djvu
