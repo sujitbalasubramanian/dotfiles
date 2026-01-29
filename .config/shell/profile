@@ -24,7 +24,7 @@ export ANDROID_HOME=$XDG_DATA_HOME/Android/Sdk
 export ANDROID_SDK_ROOT=$XDG_DATA_HOME/Android/Sdk
 export PYENV_ROOT=$XDG_DATA_HOME/pyenv
 export NVM_DIR=$XDG_DATA_HOME/nvm
-export FVM_CACHE_PATH=$XDG_DATA_HOME/fvm
+export BUN_INSTALL=$XDG_DATA_HOME/.bun
 
 # executables
 export PATH=$XDG_DATA_HOME/npm/bin:$PATH
@@ -36,10 +36,12 @@ export PATH=$ANDROID_HOME/platforms:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 export PATH=$ANDROID_HOME/emulator:$PATH
 export PATH=$PYENV_ROOT/bin:$PATH
-export PATH=$XDG_CONFIG_HOME/composer/vendor/bin:$PATH
+export PATH=$BUN_INSTALL/bin:$PATH
 export PATH=$FVM_CACHE_PATH/default/bin:$PATH
 export PATH=$HOME/.pub-cache/bin:$PATH
 export PATH=$HOME/.local/bin/scripts:$PATH
+export PATH="$HOME/fvm/bin:$PATH"
+export PATH="$HOME/fvm/default/bin:$PATH"
 
 # programs
 export TERM="xterm-256color"
@@ -55,6 +57,8 @@ export IMAGE="swayimg"
 export OPENER="xdg-open"
 
 export QT_QPA_PLATFORMTHEME=qt6ct
+
+export CHROME_EXECUTABLE="google-chrome-stable"
 
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude .cache"
 

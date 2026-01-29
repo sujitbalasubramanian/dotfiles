@@ -135,6 +135,26 @@ require("lazy").setup {
         { "<leader>tt", "<CMD>TodoTelescope<CR>", mode = "n", desc = "Todo finder" },
       },
     },
+    {
+      "hat0uma/csvview.nvim",
+      opts = {
+        parser = { comments = { "#", "//" } },
+        keymaps = {
+          -- Text objects for selecting fields
+          textobject_field_inner = { "if", mode = { "o", "x" } },
+          textobject_field_outer = { "af", mode = { "o", "x" } },
+          -- Excel-like navigation:
+          -- Use <Tab> and <S-Tab> to move horizontally between fields.
+          -- Use <Enter> and <S-Enter> to move vertically between rows and place the cursor at the end of the field.
+          -- Note: In terminals, you may need to enable CSI-u mode to use <S-Tab> and <S-Enter>.
+          jump_next_field_end = { "<Tab>", mode = { "n", "v" } },
+          jump_prev_field_end = { "<S-Tab>", mode = { "n", "v" } },
+          jump_next_row = { "<Enter>", mode = { "n", "v" } },
+          jump_prev_row = { "<S-Enter>", mode = { "n", "v" } },
+        },
+      },
+      cmd = { "CsvViewEnable", "CsvViewDisable", "CsvViewToggle" },
+    },
     { "MagicDuck/grug-far.nvim", opts = {} },
     -- vim wiki
     {
@@ -217,29 +237,11 @@ require("lazy").setup {
     -- treesitter
     {
       "nvim-treesitter/nvim-treesitter",
-      dependencies = {
-        { "nvim-treesitter/nvim-treesitter-context", opts = {} },
-        {
-          "JoosepAlviste/nvim-ts-context-commentstring",
-          config = function()
-            require("ts_context_commentstring").setup {
-              enable_autocmd = false,
-            }
-            local get_option = vim.filetype.get_option
-            vim.filetype.get_option = function(filetype, option)
-              return option == "commentstring"
-                  and require("ts_context_commentstring.internal").calculate_commentstring()
-                or get_option(filetype, option)
-            end
-          end,
-        },
-        { "windwp/nvim-ts-autotag", opts = {} },
-      },
       branch = "main",
       lazy = false,
       build = ":TSUpdate",
       opts = {
-        ensure_installed = {},
+        ensure_installed = { "tsx" },
         ignore_install = {},
         sync_install = false,
         auto_install = true,
@@ -264,6 +266,21 @@ require("lazy").setup {
           additional_vim_regex_highlighting = { "markdown" },
         },
       },
+    },
+    { "nvim-treesitter/nvim-treesitter-context", opts = {} },
+    { "windwp/nvim-ts-autotag", opts = {} },
+    {
+      "joosepalviste/nvim-ts-context-commentstring",
+      config = function()
+        require("ts_context_commentstring").setup {
+          enable_autocmd = false,
+        }
+        local get_option = vim.filetype.get_option
+        vim.filetype.get_option = function(filetype, option)
+          return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
+            or get_option(filetype, option)
+        end
+      end,
     },
     -- completion & snips
     {
@@ -344,6 +361,8 @@ require("lazy").setup {
             map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
             map("<leader>ca", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
 
+            map("<leader>do", vim.diagnostic.open_float, "[G]oto Code [A]ction", { "n", "x" })
+
             local client = vim.lsp.get_client_by_id(event.data.client_id)
             local bufnr = event.buf
 
@@ -420,8 +439,6 @@ require("lazy").setup {
           gopls = {},
           pyright = {},
           rust_analyzer = {},
-          ts_ls = {},
-          lua_ls = {},
           astro = {},
           tailwindcss = {},
           emmet_ls = {},
@@ -433,6 +450,7 @@ require("lazy").setup {
         vim.list_extend(ensure_installed, {
           "stylua",
           "prettier",
+          "biome",
           "goimports",
           "tex-fmt",
           "sqlfmt",
@@ -440,7 +458,6 @@ require("lazy").setup {
           "sqlfluff",
           "golangci-lint",
           "pylint",
-          "eslint_d",
         })
 
         require("mason-tool-installer").setup {
@@ -470,6 +487,11 @@ require("lazy").setup {
       },
     },
     {
+      "pmizio/typescript-tools.nvim",
+      dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+      opts = {},
+    },
+    {
       "nvim-flutter/flutter-tools.nvim",
       lazy = false,
       dependencies = {
@@ -492,9 +514,11 @@ require("lazy").setup {
           astro = { "prettier" },
           json = { "jq" },
           yaml = { "prettier" },
+          vimwiki = { "prettier" },
           lua = { "stylua" },
           c = { "clang_format" },
           cpp = { "clang_format" },
+          cmake = { "cmake_format" },
           tex = { "tex-fmt" },
           go = { "gofmt", "goimports" },
           rust = { "rustfmt", lsp_format = "fallback" },
@@ -529,10 +553,6 @@ require("lazy").setup {
         local lint = require "lint"
 
         lint.linters_by_ft = {
-          javascript = { "eslint_d" },
-          typescript = { "eslint_d" },
-          javascriptreact = { "eslint_d" },
-          typescriptreact = { "eslint_d" },
           css = { "prettier" },
           c = { "clangtidy" },
           cpp = { "clangtidy" },

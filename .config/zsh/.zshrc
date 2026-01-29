@@ -69,3 +69,6 @@ fi
 
 # Tools
 eval "$(pyenv init -)"
+
+# bun completions
+[ -s "/home/sujit/.bun/_bun" ] && source "/home/sujit/.bun/_bun"
