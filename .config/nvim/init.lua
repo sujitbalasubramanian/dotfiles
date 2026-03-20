@@ -505,10 +505,10 @@ require("lazy").setup {
       event = "BufWritePre",
       opts = {
         formatters_by_ft = {
-          javascript = { "prettier" },
-          typescript = { "prettier" },
-          javascriptreact = { "prettier" },
-          typescriptreact = { "prettier" },
+          javascript = { "biome" },
+          typescript = { "biome" },
+          javascriptreact = { "biome" },
+          typescriptreact = { "biome" },
           css = { "prettier" },
           html = { "prettier" },
           astro = { "prettier" },
@@ -553,7 +553,6 @@ require("lazy").setup {
         local lint = require "lint"
 
         lint.linters_by_ft = {
-          css = { "prettier" },
           c = { "clangtidy" },
           cpp = { "clangtidy" },
           go = { "golangcilint" },

@@ -10,4 +10,3 @@ image/gif=swayimg.desktop;
 video/x-matroska=mpv.desktop
 video/mp4=mpv.desktop
 inode/directory=yazi.desktop
-x-scheme-handler/postman=Postman.desktop

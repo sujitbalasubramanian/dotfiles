@@ -15,9 +15,10 @@ zstyle ':vcs_info:git:*' formats ' g:(%b)'
 setopt prompt_subst
 PS1='%B%{$fg[blue]%}%1d%{$fg[yellow]%}${vcs_info_msg_0_}%{$reset_color%}~> %b'
 
-# Custom functions
+# Custom functions & completion
 fpath+=(${ZDOTDIR:-~}/.zsh_functions)
-fpath+=(${ZDOTDIR:-~}/comp)
+fpath+=(${ZDOTDIR:-~}/completions)
+fpath+=(${BUN_DIR})
 
 # Completion
 autoload -U compinit
@@ -55,20 +56,17 @@ autoload edit-command-line
 zle -N edit-command-line
 bindkey '^E' edit-command-line
 
-# fzf
+# completion and activation
 if command -v fzf >/dev/null; then
     source /usr/share/fzf/completion.zsh
     source /usr/share/fzf/key-bindings.zsh
 fi
 
-# External configs
-[[ -f "$XDG_CONFIG_HOME/shell/alias" ]] && source "$XDG_CONFIG_HOME/shell/alias"
 [[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] &&
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[[ -f "$XDG_CONFIG_HOME/shell/alias" ]] && source "$XDG_CONFIG_HOME/shell/alias"
+
 [[ -f "/usr/share/nvm/init-nvm.sh" ]] && source /usr/share/nvm/init-nvm.sh
 
-# Tools
-eval "$(pyenv init -)"
-
-# bun completions
-[ -s "/home/sujit/.bun/_bun" ] && source "/home/sujit/.bun/_bun"
+# eval "$(pyenv init -)"

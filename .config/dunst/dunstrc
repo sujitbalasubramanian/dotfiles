@@ -1,5 +1,0 @@
-# vim: ft=cfg
-
-[global]
-    offset = 10x10
-    font = FiraCode Nerd Font 12
