@@ -18,7 +18,6 @@ PS1='%B%{$fg[blue]%}%1d%{$fg[yellow]%}${vcs_info_msg_0_}%{$reset_color%}~> %b'
 # Custom functions & completion
 fpath+=(${ZDOTDIR:-~}/.zsh_functions)
 fpath+=(${ZDOTDIR:-~}/completions)
-fpath+=(${BUN_DIR})
 
 # Completion
 autoload -U compinit
@@ -57,6 +56,8 @@ zle -N edit-command-line
 bindkey '^E' edit-command-line
 
 # completion and activation
+[[ -f "$XDG_CONFIG_HOME/shell/alias" ]] && source "$XDG_CONFIG_HOME/shell/alias"
+
 if command -v fzf >/dev/null; then
     source /usr/share/fzf/completion.zsh
     source /usr/share/fzf/key-bindings.zsh
@@ -65,8 +66,8 @@ fi
 [[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] &&
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-[[ -f "$XDG_CONFIG_HOME/shell/alias" ]] && source "$XDG_CONFIG_HOME/shell/alias"
+[[ -f "/usr/share/nvm/nvm.sh" ]] && source /usr/share/nvm/nvm.sh --no-use
 
-[[ -f "/usr/share/nvm/init-nvm.sh" ]] && source /usr/share/nvm/init-nvm.sh
-
-eval "$(pyenv init -)"
+if command -v pyenv >/dev/null; then
+  eval "$(pyenv init -)"
+fi
