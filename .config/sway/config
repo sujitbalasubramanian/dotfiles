@@ -129,6 +129,7 @@ bindsym $alt+p exec wmenu-run -f 'FiraCode Nerd Font 11'
 bindsym $super+e exec BEMOJI_PICKER_CMD="wmenu" bemoji -t
 bindsym $super+p exec colorpicker
 bindsym $super+l exec swaylock
+bindsym $super+n exec swaync-client -t
 
 mode "quicklanch" {
     bindsym b exec "$BROWSER & swaymsg mode default"
