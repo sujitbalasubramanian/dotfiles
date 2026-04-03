@@ -75,16 +75,23 @@ packadd { "https://github.com/nvim-mini/mini.nvim" }
 require("mini.tabline").setup()
 require("mini.statusline").setup()
 require("mini.notify").setup()
-require("mini.pairs").setup()
 require("mini.surround").setup()
-
-local minidiff = require "mini.diff"
-minidiff.setup()
-km("n", "<leader>dv", minidiff.toggle_overlay, { desc = "Toggle git diff" })
 
 -- rainbow line
 packadd { "https://github.com/lukas-reineke/indent-blankline.nvim" }
 require("ibl").setup()
+
+-- git integration
+packadd {
+  "https://github.com/NeogitOrg/neogit",
+  "https://github.com/nvim-lua/plenary.nvim", -- required
+  "https://github.com/sindrets/diffview.nvim", -- optional
+  "https://github.com/m00qek/baleia.nvim", -- optional
+  "https://github.com/nvim-telescope/telescope.nvim", -- optional
+}
+km("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Open Neogit UI" })
+km("n", "<leader>dvo", "<cmd>DiffviewOpen<cr>", { desc = "diffview open" })
+km("n", "<leader>dvc", "<cmd>DiffviewClose<cr>", { desc = "diffview close" })
 
 -- undotree
 packadd { "https://github.com/mbbill/undotree" }
@@ -200,10 +207,11 @@ hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
 hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
 
 -- colorizer
-packadd { "https://github.com/norcalli/nvim-colorizer.lua" }
-require("colorizer").setup()
+packadd { "https://github.com/brenoprata10/nvim-highlight-colors" }
+require("nvim-highlight-colors").setup {}
+o.termguicolors = true
 
--- dadbod (database UI)
+-- dadbod DBUI
 packadd {
   "https://github.com/tpope/vim-dadbod",
   "https://github.com/kristijanhusak/vim-dadbod-ui",
@@ -211,12 +219,13 @@ packadd {
 }
 g.db_ui_use_nerd_fonts = 1
 
--- treesitter
+-- treesitter syntax highlighting, comments and autopairs
 packadd {
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/nvim-treesitter/nvim-treesitter-context",
-  "https://github.com/windwp/nvim-ts-autotag",
   "https://github.com/joosepalviste/nvim-ts-context-commentstring",
+  "https://github.com/windwp/nvim-autopairs",
+  "https://github.com/windwp/nvim-ts-autotag",
 }
 
 require("nvim-treesitter").setup {
@@ -244,7 +253,6 @@ require("nvim-treesitter").setup {
 }
 
 require("treesitter-context").setup()
-require("nvim-ts-autotag").setup()
 require("ts_context_commentstring").setup { enable_autocmd = false }
 
 local get_option = vim.filetype.get_option
@@ -252,6 +260,9 @@ vim.filetype.get_option = function(filetype, option)
   return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
     or get_option(filetype, option)
 end
+
+require("nvim-autopairs").setup()
+require("nvim-ts-autotag").setup()
 
 -- blink.cmp and LuaSnip
 packadd {
@@ -269,6 +280,39 @@ require("blink.cmp").setup {
   snippets = { preset = "luasnip" },
   completion = {
     documentation = { auto_show = false },
+    menu = {
+      draw = {
+        components = {
+          -- customize the drawing of kind icons
+          kind_icon = {
+            text = function(ctx)
+              -- default kind icon
+              local icon = ctx.kind_icon
+              -- if LSP source, check for color derived from documentation
+              if ctx.item.source_name == "LSP" then
+                local color_item = require("nvim-highlight-colors").format(ctx.item.documentation, { kind = ctx.kind })
+                if color_item and color_item.abbr ~= "" then
+                  icon = color_item.abbr
+                end
+              end
+              return icon .. ctx.icon_gap
+            end,
+            highlight = function(ctx)
+              -- default highlight group
+              local highlight = "BlinkCmpKind" .. ctx.kind
+              -- if LSP source, check for color derived from documentation
+              if ctx.item.source_name == "LSP" then
+                local color_item = require("nvim-highlight-colors").format(ctx.item.documentation, { kind = ctx.kind })
+                if color_item and color_item.abbr_hl_group then
+                  highlight = color_item.abbr_hl_group
+                end
+              end
+              return highlight
+            end,
+          },
+        },
+      },
+    },
   },
   sources = {
     default = { "lsp", "path", "snippets", "buffer" },
