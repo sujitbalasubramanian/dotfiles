@@ -72,10 +72,13 @@ vim.cmd [[ let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown
 -- mini.nvim
 packadd { "https://github.com/nvim-mini/mini.nvim" }
 
-require("mini.tabline").setup()
 require("mini.statusline").setup()
 require("mini.notify").setup()
 require("mini.surround").setup()
+require("mini.diff").setup()
+local minidiff = require "mini.diff"
+minidiff.setup()
+km("n", "<leader>dv", minidiff.toggle_overlay, { desc = "Diffview toggle" })
 
 -- rainbow line
 packadd { "https://github.com/lukas-reineke/indent-blankline.nvim" }
@@ -84,14 +87,9 @@ require("ibl").setup()
 -- git integration
 packadd {
   "https://github.com/NeogitOrg/neogit",
-  "https://github.com/nvim-lua/plenary.nvim", -- required
-  "https://github.com/sindrets/diffview.nvim", -- optional
-  "https://github.com/m00qek/baleia.nvim", -- optional
-  "https://github.com/nvim-telescope/telescope.nvim", -- optional
+  "https://github.com/nvim-lua/plenary.nvim",
 }
 km("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Open Neogit UI" })
-km("n", "<leader>dvo", "<cmd>DiffviewOpen<cr>", { desc = "diffview open" })
-km("n", "<leader>dvc", "<cmd>DiffviewClose<cr>", { desc = "diffview close" })
 
 -- undotree
 packadd { "https://github.com/mbbill/undotree" }
@@ -112,29 +110,48 @@ require("oil").setup {
 km("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 km("n", "<leader>-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
--- telescope: picker
-packadd {
-  "https://github.com/nvim-telescope/telescope.nvim",
-  "https://github.com/nvim-lua/plenary.nvim",
-}
-
-require("telescope").setup {
-  defaults = require("telescope.themes").get_ivy {},
-}
-
-local builtin = require "telescope.builtin"
-km("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
-km("n", "<leader>fg", builtin.git_files, { desc = "Git files" })
-km("n", "<leader>fh", builtin.help_tags, { desc = "Help tags" })
-km("n", "<leader>fw", builtin.grep_string, { desc = "Grep string (under cursor)" })
-km("n", "<leader>fl", builtin.live_grep, { desc = "Live grep" })
-km("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
-km("n", "<leader>fd", builtin.diagnostics, { desc = "Diagnostics" })
-
 -- todo-comments
-packadd { "https://github.com/folke/todo-comments.nvim" }
+packadd {
+  "https://github.com/folke/todo-comments.nvim",
+}
 require("todo-comments").setup()
-km("n", "<leader>tt", "<CMD>TodoTelescope<CR>", { desc = "Todo finder" })
+
+-- snacks: picker
+packadd {
+  "https://github.com/folke/snacks.nvim",
+}
+
+local snacks = require "snacks"
+
+snacks.setup {
+  input = { enabled = true },
+  picker = {
+    enabled = true,
+    actions = {
+      opencode_send = function(...)
+        return require("opencode").snacks_picker_send(...)
+      end,
+    },
+    win = {
+      input = {
+        keys = {
+          ["<c-l>"] = { "opencode_send", mode = { "n", "i" } },
+        },
+      },
+    },
+  },
+}
+
+km("n", "<leader>ff", snacks.picker.files, { desc = "Find Files" })
+km("n", "<leader>fg", snacks.picker.git_files, { desc = "Git Files" })
+km("n", "<leader>fh", snacks.picker.help, { desc = "Help Page" })
+km("n", "<leader>fb", snacks.picker.buffers, { desc = "Help Page" })
+km("n", "<leader>e", snacks.picker.explorer, { desc = "Buffer Diagnostics" })
+km("n", "<leader>fl", snacks.picker.grep, { desc = "Live grep" })
+km("n", "<leader>fw", snacks.picker.grep_word, { desc = "Grep string (under cursor)" })
+km("n", "<leader>tt", function()
+  snacks.picker.todo_comments()
+end, { desc = "Todo/Fix/Fixme finder" })
 
 -- csvview
 packadd { "https://github.com/hat0uma/csvview.nvim" }
@@ -358,13 +375,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
     end
 
-    map("gd", builtin.lsp_definitions, "Goto Definition")
-    map("gr", builtin.lsp_references, "Goto References")
-    map("gt", builtin.lsp_type_definitions, "Goto Type Definition")
-    map("gI", builtin.lsp_implementations, "Goto Implementation")
-    map("<leader>ds", builtin.lsp_document_symbols, "Document Symbols")
-    map("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "Workspace Symbols")
+    -- pickers
+    map("<leader>fd", snacks.picker.diagnostics, "Project Diagnostics")
+    map("<leader>fD", snacks.picker.diagnostics_buffer, "Buffer Diagnostics")
+    map("gd", snacks.picker.lsp_definitions, "Goto Definition")
+    map("gr", snacks.picker.lsp_references, "References")
+    map("gt", snacks.picker.lsp_type_definitions, "Goto Type Definition")
+    map("gI", snacks.picker.lsp_implementations, "Goto Implementation")
+    map("<leader>ds", snacks.picker.lsp_symbols, "Document Symbols")
+    map("<leader>ws", snacks.picker.lsp_workspace_symbols, "Workspace Symbols")
 
+    -- Other
     map("gD", vim.lsp.buf.declaration, "Goto Declaration")
     map("K", vim.lsp.buf.hover, "Hover Documentation")
     map("<leader>rn", vim.lsp.buf.rename, "Rename")
@@ -528,6 +549,44 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
     end
   end,
 })
+
+-- agent and inline completion
+packadd {
+  "https://github.com/github/copilot.vim",
+}
+
+packadd {
+  "https://github.com/nickjvandyke/opencode.nvim",
+}
+
+g.opencode_opts = {}
+o.autoread = true
+
+local opencode = require "opencode"
+
+km({ "n", "x" }, "<C-a>", function()
+  opencode.ask("@this: ", { submit = true })
+end, { desc = "Ask opencode…" })
+km({ "n", "x" }, "<C-x>", function()
+  opencode.select()
+end, { desc = "Execute opencode action…" })
+km({ "n", "t" }, "<C-.>", function()
+  opencode.toggle()
+end, { desc = "Toggle opencode" })
+
+km({ "n", "x" }, "go", function()
+  return opencode.operator "@this "
+end, { desc = "Add range to opencode", expr = true })
+km("n", "goo", function()
+  return opencode.operator "@this " .. "_"
+end, { desc = "Add line to opencode", expr = true })
+
+km("n", "<S-C-u>", function()
+  opencode.command "session.half.page.up"
+end, { desc = "Scroll opencode up" })
+km("n", "<S-C-d>", function()
+  opencode.command "session.half.page.down"
+end, { desc = "Scroll opencode down" })
 
 -- custom functions
 local function clean_unused_pack()
