@@ -235,6 +235,7 @@ packadd {
   "https://github.com/kristijanhusak/vim-dadbod-completion",
 }
 g.db_ui_use_nerd_fonts = 1
+g.db_ui_save_location = os.getenv "XDG_CACHE_HOME" .. "/nvim/dbui"
 
 -- treesitter syntax highlighting, comments and autopairs
 packadd {
@@ -554,6 +555,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 packadd {
   "https://github.com/github/copilot.vim",
 }
+
+vim.keymap.set("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
+  expr = true,
+  replace_keycodes = false,
+})
 
 packadd {
   "https://github.com/nickjvandyke/opencode.nvim",
