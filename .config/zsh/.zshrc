@@ -55,9 +55,13 @@ autoload edit-command-line
 zle -N edit-command-line
 bindkey '^E' edit-command-line
 
-# completion and activation
-[[ -f "$XDG_CONFIG_HOME/shell/alias" ]] && source "$XDG_CONFIG_HOME/shell/alias"
+# Aliases
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias pacc='sudo pacman -R $(pacman -Qtdq)'
+alias vim="nvim" vimdiff="nvim -d"
 
+# completion and activation
 if command -v fzf >/dev/null; then
     source /usr/share/fzf/completion.zsh
     source /usr/share/fzf/key-bindings.zsh

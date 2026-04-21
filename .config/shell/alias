@@ -1,9 +1,0 @@
-#!/bin/sh
-
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-
-alias fm="yazi"
-[ -x "$(command -v nvim)" ] && alias vim="nvim" vimdiff="nvim -d"
-
-alias pacc='sudo pacman -R $(pacman -Qtdq)'

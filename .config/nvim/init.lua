@@ -56,33 +56,31 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+vim.cmd [[ colo catppuccin ]]
+
 -- =========
 -- PACKAGES
 -- =========
-
--- theme
-packadd { "https://github.com/ellisonleao/gruvbox.nvim" }
-o.background = "dark"
-vim.cmd [[colorscheme gruvbox]]
 
 -- vimwiki for notes
 packadd { "https://github.com/vimwiki/vimwiki" }
 vim.cmd [[ let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown', 'ext': 'md'}] ]]
 
 -- mini.nvim
-packadd { "https://github.com/nvim-mini/mini.nvim" }
+packadd {
+  "https://github.com/nvim-mini/mini.statusline",
+  "https://github.com/nvim-mini/mini.notify",
+  "https://github.com/nvim-mini/mini.surround",
+  "https://github.com/nvim-mini/mini.diff",
+  "https://github.com/nvim-mini/mini.icons",
+}
 
 require("mini.statusline").setup()
 require("mini.notify").setup()
 require("mini.surround").setup()
 require("mini.diff").setup()
-local minidiff = require "mini.diff"
-minidiff.setup()
-km("n", "<leader>dv", minidiff.toggle_overlay, { desc = "Diffview toggle" })
 
--- rainbow line
-packadd { "https://github.com/lukas-reineke/indent-blankline.nvim" }
-require("ibl").setup()
+km("n", "<leader>dv", MiniDiff.toggle_overlay, { desc = "Diffview toggle" })
 
 -- git integration
 packadd {
@@ -90,10 +88,6 @@ packadd {
   "https://github.com/nvim-lua/plenary.nvim",
 }
 km("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Open Neogit UI" })
-
--- undotree
-packadd { "https://github.com/mbbill/undotree" }
-km("n", "<leader>u", "<CMD>UndotreeToggle<CR>")
 
 -- grug-far: find and replace
 packadd { "https://github.com/MagicDuck/grug-far.nvim" }

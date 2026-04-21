@@ -1,7 +1,6 @@
 ### Starups
 exec --no-startup-id swaync
 exec --no-startup-id xwayland-satellite
-exec --no-startup-id foot --server
 exec --no-startup-id dropbox
 
 ### Globals
@@ -136,7 +135,6 @@ mode "quicklanch" {
     bindsym z exec "$READER & swaymsg mode default"
     bindsym s exec "obs & swaymsg mode default"
     bindsym v exec "$TERMINAL -e wiremix & swaymsg mode default"
-    bindsym e exec "$TERMINAL -e yazi & swaymsg mode default"
     bindsym n exec "$TERMINAL -e $EDITOR $HOME/Dropbox/Notes/index.md  & swaymsg mode default"
     bindsym Escape mode "default"
 }
@@ -152,7 +150,8 @@ bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
 bar {
-  swaybar_command waybar
+  position bottom
+  status_command ~/.config/sway/bar
 }
 
 include /etc/sway/config.d/*
