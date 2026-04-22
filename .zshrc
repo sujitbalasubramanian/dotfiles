@@ -16,8 +16,7 @@ setopt prompt_subst
 PS1='%B%{$fg[blue]%}%1d%{$fg[yellow]%}${vcs_info_msg_0_}%{$reset_color%}~> %b'
 
 # Custom functions & completion
-fpath+=(${ZDOTDIR:-~}/.zsh_functions)
-fpath+=(${ZDOTDIR:-~}/completions)
+fpath+=(${XDG_CONFIG_HOME:-~}/shell/comp)
 
 # Completion
 autoload -U compinit
@@ -56,10 +55,14 @@ zle -N edit-command-line
 bindkey '^E' edit-command-line
 
 # Aliases
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias pacc='sudo pacman -R $(pacman -Qtdq)'
-alias vim="nvim" vimdiff="nvim -d"
+alias ls='ls --color=auto' \
+  grep='grep --color=auto' \
+  pacc='sudo pacman -R $(pacman -Qtdq)' \
+  vim='nvim' \
+  vimdiff='nvim -d' \
+  oil='nvim -c Oil' \
+  neogit='nvim -c Neogit' \
+  dbui='nvim -c DBUI'
 
 # completion and activation
 if command -v fzf >/dev/null; then
@@ -67,13 +70,11 @@ if command -v fzf >/dev/null; then
     source /usr/share/fzf/key-bindings.zsh
 fi
 
-[[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] &&
-    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-[[ -f "/usr/share/nvm/init-nvm.sh" ]] && source /usr/share/nvm/init-nvm.sh
-
 if command -v pyenv >/dev/null; then
   eval "$(pyenv init -)"
 fi
 
-[[ -f "$HOME/.work.profile" ]] && source ~/.work.profile
+[[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] &&
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[[ -f "/usr/share/nvm/init-nvm.sh" ]] && source /usr/share/nvm/init-nvm.sh

@@ -126,9 +126,17 @@ bindsym $alt+Shift+0 move container to workspace number $ws10
 bindsym $alt+Return exec $TERMINAL
 bindsym $alt+p exec wmenu-run -f 'FiraCode Nerd Font 11'
 bindsym $super+e exec BEMOJI_PICKER_CMD="wmenu" bemoji -t
-bindsym $super+p exec colorpicker
 bindsym $super+l exec swaylock
 bindsym $super+n exec swaync-client -t
+bindsym $super+p exec hexcode=$(grim -g "$(slurp -p)" - | magick - -colors 1 txt: | awk 'NR==2 {print $3}') && wl-copy -n "$hexcode"
+bindsym Print exec grim -g "$(slurp)" - | wl-copy
+bindsym Shift+Print exec grim -g "$(slurp)" ~/Pictures/$(date +'%Y-%m-%d_%H-%M-%S').png
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DFAULT_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
 mode "quicklanch" {
     bindsym b exec "$BROWSER & swaymsg mode default"
@@ -139,15 +147,6 @@ mode "quicklanch" {
     bindsym Escape mode "default"
 }
 bindsym $alt+o mode "quicklanch"
-
-# Fn bindings
-bindsym Print exec flameshot gui
-bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_SINK@ toggle
-bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-
-bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
-bindsym --locked XF86AudioMicMute exec wpctl set-mute @DFAULT_SOURCE@ toggle
-bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
 bar {
   position bottom

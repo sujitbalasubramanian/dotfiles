@@ -11,10 +11,6 @@ create_session() {
   fi
 }
 
-get_existing_sessions() {
-  tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf
-}
-
 # Ensure an argument is provided
 if [[ -z "$1" ]]; then
   echo "Error: No command or session name provided."
@@ -25,18 +21,23 @@ fi
 case "$1" in
 
   ws)
-    workdirs=$(find ~/work -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
-    projdirs=$(find ~/programs -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+    default_dirs=("$HOME/work" "$HOME/programs" "$HOME/learn")
 
-    seldir=$(printf "%s\n%s\n" "$workdirs" "$projdirs" | fzf)
-
-    if [[ -n "$seldir" ]]; then
-      create_session "$(basename "$seldir")" "$seldir"
+    selddirs=$(
+      for dir in "${default_dirs[@]}"; do
+        if [[ -d "$dir" ]]; then
+          find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+        fi
+      done | fzf
+    )
+    if [[ -n "$selddirs" ]]; then
+      create_session "$(basename "$selddirs")" "$selddirs"
+      exit 0
     fi
     ;;
 
   switch)
-    session=$(get_existing_sessions)
+    session=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf)
     [[ -n "$session" ]] && tmux switch-client -t "$session"
     ;;
 

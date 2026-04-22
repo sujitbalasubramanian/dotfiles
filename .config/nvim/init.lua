@@ -104,16 +104,13 @@ require("oil").setup {
 km("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 km("n", "<leader>-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
--- todo-comments
-packadd {
-  "https://github.com/folke/todo-comments.nvim",
-}
-require("todo-comments").setup()
-
--- snacks: picker
+-- floke's snacks & todo-comments
 packadd {
   "https://github.com/folke/snacks.nvim",
+  "https://github.com/folke/todo-comments.nvim",
 }
+
+require("todo-comments").setup()
 
 local snacks = require "snacks"
 
@@ -138,11 +135,12 @@ snacks.setup {
 
 km("n", "<leader>ff", snacks.picker.files, { desc = "Find Files" })
 km("n", "<leader>fg", snacks.picker.git_files, { desc = "Git Files" })
-km("n", "<leader>fh", snacks.picker.help, { desc = "Help Page" })
-km("n", "<leader>fb", snacks.picker.buffers, { desc = "Help Page" })
+km("n", "<leader>fh", snacks.picker.help, { desc = "Help Pages" })
+km("n", "<leader>fb", snacks.picker.buffers, { desc = "Find Buffer" })
 km("n", "<leader>e", snacks.picker.explorer, { desc = "Buffer Diagnostics" })
 km("n", "<leader>fl", snacks.picker.grep, { desc = "Live grep" })
 km("n", "<leader>fw", snacks.picker.grep_word, { desc = "Grep string (under cursor)" })
+km("n", "<leader>fm", snacks.picker.man, { desc = "Man Pages" })
 km("n", "<leader>tt", function()
   snacks.picker.todo_comments()
 end, { desc = "Todo/Fix/Fixme finder" })
@@ -160,62 +158,6 @@ require("csvview").setup {
     jump_prev_row = { "<S-Enter>", mode = { "n", "v" } },
   },
 }
-
--- multicursor
-packadd { "https://github.com/jake-stewart/multicursor.nvim" }
-local mc = require "multicursor-nvim"
-mc.setup()
-
-km({ "n", "x" }, "<up>", function()
-  mc.lineAddCursor(-1)
-end)
-km({ "n", "x" }, "<down>", function()
-  mc.lineAddCursor(1)
-end)
-km({ "n", "x" }, "<leader><up>", function()
-  mc.lineSkipCursor(-1)
-end)
-km({ "n", "x" }, "<leader><down>", function()
-  mc.lineSkipCursor(1)
-end)
-km({ "n", "x" }, "<leader>n", function()
-  mc.matchAddCursor(1)
-end)
-km({ "n", "x" }, "<leader>s", function()
-  mc.matchSkipCursor(1)
-end)
-km({ "n", "x" }, "<leader>N", function()
-  mc.matchAddCursor(-1)
-end)
-km({ "n", "x" }, "<leader>S", function()
-  mc.matchSkipCursor(-1)
-end)
-km("n", "<c-leftmouse>", mc.handleMouse)
-km("n", "<c-leftdrag>", mc.handleMouseDrag)
-km("n", "<c-leftrelease>", mc.handleMouseRelease)
-km({ "n", "x" }, "<c-q>", mc.toggleCursor)
-
-mc.addKeymapLayer(function(layerSet)
-  layerSet({ "n", "x" }, "<left>", mc.prevCursor)
-  layerSet({ "n", "x" }, "<right>", mc.nextCursor)
-  layerSet({ "n", "x" }, "<leader>x", mc.deleteCursor)
-  layerSet("n", "<esc>", function()
-    if not mc.cursorsEnabled() then
-      mc.enableCursors()
-    else
-      mc.clearCursors()
-    end
-  end)
-end)
-
-local hl = vim.api.nvim_set_hl
-hl(0, "MultiCursorCursor", { reverse = true })
-hl(0, "MultiCursorVisual", { link = "Visual" })
-hl(0, "MultiCursorSign", { link = "SignColumn" })
-hl(0, "MultiCursorMatchPreview", { link = "Search" })
-hl(0, "MultiCursorDisabledCursor", { reverse = true })
-hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
-hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
 
 -- colorizer
 packadd { "https://github.com/brenoprata10/nvim-highlight-colors" }
