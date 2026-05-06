@@ -3,7 +3,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.font_size = 12
-config.font = wezterm.font("FiraCode Nerd Font")
+config.font = wezterm.font("NotoMono Nerd Font")
 config.color_scheme = "Catppuccin Mocha"
 
 config.window_padding = {

@@ -68,14 +68,12 @@ vim.cmd [[ let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown
 
 -- mini.nvim
 packadd {
-  "https://github.com/nvim-mini/mini.statusline",
   "https://github.com/nvim-mini/mini.notify",
   "https://github.com/nvim-mini/mini.surround",
   "https://github.com/nvim-mini/mini.diff",
   "https://github.com/nvim-mini/mini.icons",
 }
 
-require("mini.statusline").setup()
 require("mini.notify").setup()
 require("mini.surround").setup()
 require("mini.diff").setup()
@@ -104,13 +102,8 @@ require("oil").setup {
 km("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 km("n", "<leader>-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
--- floke's snacks & todo-comments
-packadd {
-  "https://github.com/folke/snacks.nvim",
-  "https://github.com/folke/todo-comments.nvim",
-}
-
-require("todo-comments").setup()
+-- picker
+packadd { "https://github.com/folke/snacks.nvim" }
 
 local snacks = require "snacks"
 
@@ -142,8 +135,16 @@ km("n", "<leader>fl", snacks.picker.grep, { desc = "Live grep" })
 km("n", "<leader>fw", snacks.picker.grep_word, { desc = "Grep string (under cursor)" })
 km("n", "<leader>fm", snacks.picker.man, { desc = "Man Pages" })
 km("n", "<leader>tt", function()
-  snacks.picker.todo_comments()
-end, { desc = "Todo/Fix/Fixme finder" })
+  snacks.picker.grep {
+    search = [[\b(TODO|FIXME|HACK|NOTE|BUG)\b]],
+    live = false,
+    args = { "--pcre2", "--ignore-case" },
+    title = "Todo Finder",
+    on_show = function(picker)
+      picker.input:set ""
+    end,
+  }
+end, { desc = "Todo finder" })
 
 -- csvview
 packadd { "https://github.com/hat0uma/csvview.nvim" }
@@ -176,7 +177,6 @@ g.db_ui_save_location = os.getenv "XDG_CACHE_HOME" .. "/nvim/dbui"
 -- treesitter syntax highlighting, comments and autopairs
 packadd {
   "https://github.com/nvim-treesitter/nvim-treesitter",
-  "https://github.com/nvim-treesitter/nvim-treesitter-context",
   "https://github.com/joosepalviste/nvim-ts-context-commentstring",
   "https://github.com/windwp/nvim-autopairs",
   "https://github.com/windwp/nvim-ts-autotag",
@@ -206,7 +206,6 @@ require("nvim-treesitter").setup {
   },
 }
 
-require("treesitter-context").setup()
 require("ts_context_commentstring").setup { enable_autocmd = false }
 
 local get_option = vim.filetype.get_option
@@ -390,6 +389,7 @@ require("mason").setup()
 require("mason-tool-installer").setup {
   ensure_installed = {
     "clangd",
+    "cmakelang",
 
     "pyright",
     "ruff",

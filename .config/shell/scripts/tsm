@@ -23,15 +23,15 @@ case "$1" in
   ws)
     default_dirs=("$HOME/work" "$HOME/programs" "$HOME/learn")
 
-    selddirs=$(
+    selected_dir=$(
       for dir in "${default_dirs[@]}"; do
         if [[ -d "$dir" ]]; then
           find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
         fi
       done | fzf
     )
-    if [[ -n "$selddirs" ]]; then
-      create_session "$(basename "$selddirs")" "$selddirs"
+    if [[ -n "$selected_dir" ]]; then
+      create_session "$(basename "$selected_dir")" "$selected_dir"
       exit 0
     fi
     ;;

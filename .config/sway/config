@@ -4,7 +4,7 @@ exec --no-startup-id xwayland-satellite
 exec --no-startup-id dropbox
 
 ### Globals
-font pango:Fira Code Nerd Font 11
+font pango:NotoMono Nerd Font 11
 for_window [class="^.*"] border pixel 2
 seat * hide_cursor when-typing enable
 
@@ -22,9 +22,9 @@ output e-DP resolution 1920x1080 position 1920,0
 
 ### Idle configuration
 exec swayidle -w \
-         timeout 300 swaylock \
+         timeout 300 waylock \
          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-         before-sleep swaylock
+         before-sleep waylock
 
 ### Input configuration
 input type:touchpad {
@@ -124,9 +124,8 @@ bindsym $alt+Shift+0 move container to workspace number $ws10
 
 ### Application bindings
 bindsym $alt+Return exec $TERMINAL
-bindsym $alt+p exec wmenu-run -f 'FiraCode Nerd Font 11'
-bindsym $super+e exec BEMOJI_PICKER_CMD="wmenu" bemoji -t
-bindsym $super+l exec swaylock
+bindsym $alt+p exec wmenu-run -f 'NotoMono Nerd Font 11'
+bindsym $super+l exec waylock
 bindsym $super+n exec swaync-client -t
 bindsym $super+p exec hexcode=$(grim -g "$(slurp -p)" - | magick - -colors 1 txt: | awk 'NR==2 {print $3}') && wl-copy -n "$hexcode"
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
@@ -142,6 +141,7 @@ mode "quicklanch" {
     bindsym b exec "$BROWSER & swaymsg mode default"
     bindsym z exec "$READER & swaymsg mode default"
     bindsym s exec "obs & swaymsg mode default"
+    bindsym g exec "gimp & swaymsg mode default"
     bindsym v exec "$TERMINAL -e wiremix & swaymsg mode default"
     bindsym n exec "$TERMINAL -e $EDITOR $HOME/Dropbox/Notes/index.md  & swaymsg mode default"
     bindsym Escape mode "default"
