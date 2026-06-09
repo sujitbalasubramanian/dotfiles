@@ -393,6 +393,7 @@ require("mason-tool-installer").setup {
 
     "pyright",
     "ruff",
+    "taplo",
 
     "lua_ls",
     "stylua",
@@ -400,6 +401,8 @@ require("mason-tool-installer").setup {
     "ts_ls",
     "prettier",
     "biome",
+    "oxfmt",
+    "oxlint",
     "tailwindcss",
     "emmet_ls",
     "cssls",
@@ -411,10 +414,12 @@ require("mason-tool-installer").setup {
 
     "rust_analyzer",
 
+    "dockerls",
+
     "sqlfmt",
     "sqlfluff",
+
     "tex-fmt",
-    "taplo",
   },
 }
 
@@ -432,10 +437,10 @@ require("mason-lspconfig").setup {
 packadd { "https://github.com/stevearc/conform.nvim" }
 require("conform").setup {
   formatters_by_ft = {
-    javascript = { "biome" },
-    typescript = { "biome" },
-    javascriptreact = { "biome" },
-    typescriptreact = { "biome" },
+    javascript = { "biome", "oxfmt", "prettier", stop_after_first = true },
+    typescript = { "biome", "oxfmt", "prettier", stop_after_first = true },
+    javascriptreact = { "biome", "oxfmt", "prettier", stop_after_first = true },
+    typescriptreact = { "biome", "oxfmt", "prettier", stop_after_first = true },
     css = { "prettier" },
     html = { "prettier" },
     astro = { "prettier" },
@@ -450,12 +455,19 @@ require("conform").setup {
     go = { "gofmt", "goimports" },
     rust = { "rustfmt", lsp_format = "fallback" },
     python = { "ruff_fix", "ruff_format" },
-    dockerfile = { "dockerfmt" },
     sql = { "sqlfmt" },
     toml = { "taplo" },
   },
   default_format_opts = {
     lsp_format = "fallback",
+  },
+  formatters = {
+    biome = {
+      require_cwd = true,
+    },
+    oxfmt = {
+      require_cwd = true,
+    },
   },
   format_on_save = {
     lsp_fallback = true,
@@ -469,6 +481,10 @@ packadd { "https://github.com/mfussenegger/nvim-lint" }
 local lint = require "lint"
 
 lint.linters_by_ft = {
+  javascript = { "biomejs", "oxlint", "eslint_d" },
+  javascriptreact = { "biomejs", "oxlint", "eslint_d" },
+  typescript = { "biomejs", "oxlint", "eslint_d" },
+  typescriptreact = { "biomejs", "oxlint", "eslint_d" },
   c = { "clangtidy" },
   cpp = { "clangtidy" },
   go = { "golangcilint" },

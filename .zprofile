@@ -32,7 +32,7 @@ export PATH=$XDG_CONFIG_HOME/shell/scripts:$PATH
 # programs
 export TERM="xterm-256color"
 export COLORTERM="truecolor"
-export TERMINAL="wezterm"
+export TERMINAL="footclient"
 export BROWSER="chromium"
 export EDITOR="nvim"
 export VISUAL="nvim"
