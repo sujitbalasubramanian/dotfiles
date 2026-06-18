@@ -3,6 +3,7 @@ archlinux-wallpaper
 aria2
 base
 base-devel
+bc
 bluetui
 bluez
 bluez-utils
@@ -23,6 +24,7 @@ dropbox-cli
 emacs
 foot
 freerdp
+fvm
 fzf
 gdb
 gimp
@@ -43,6 +45,7 @@ linux
 linux-firmware
 linux-headers
 lld
+lldb
 llvm
 lua
 luarocks

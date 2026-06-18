@@ -16,6 +16,7 @@ export ANDROID_SDK_ROOT=$XDG_DATA_HOME/Android/Sdk
 export PYENV_ROOT=$XDG_DATA_HOME/pyenv
 export NVM_DIR=$XDG_DATA_HOME/nvm
 export VCPKG_ROOT=$XDG_DATA_HOME/vcpkg
+export FVM_CACHE_PATH=$XDG_DATA_HOME/fvm
 
 # executables
 export PATH=$XDG_DATA_HOME/npm/bin:$PATH
@@ -27,6 +28,7 @@ export PATH=$ANDROID_HOME/platforms:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 export PATH=$ANDROID_HOME/emulator:$PATH
 export PATH=$PYENV_ROOT/bin:$PATH
+export PATH=$FVM_CACHE_PATH/default/bin:$PATH
 export PATH=$XDG_CONFIG_HOME/shell/scripts:$PATH
 
 # programs

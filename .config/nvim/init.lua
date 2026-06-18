@@ -3,6 +3,10 @@ local g = vim.g
 local km = vim.keymap.set
 local packadd = vim.pack.add
 
+-- paths
+local cache_path = os.getenv "XDG_CACHE_HOME" or vim.fn.stdpath "cache"
+local data_path = os.getenv "XDG_DATA_HOME" or vim.fn.stdpath "data"
+
 -- settings
 o.syntax = "on"
 o.nu = true
@@ -17,8 +21,8 @@ o.smartindent = true
 o.swapfile = false
 o.backup = true
 o.backupcopy = "yes"
-o.backupdir = os.getenv "XDG_CACHE_HOME" .. "/nvim/backup"
-o.undodir = os.getenv "XDG_CACHE_HOME" .. "/nvim/undodir"
+o.backupdir = cache_path .. "/nvim/backup"
+o.undodir = cache_path .. "/nvim/undodir"
 o.undofile = true
 
 o.scrolloff = 10
@@ -89,6 +93,12 @@ km("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Open Neogit UI" })
 
 -- grug-far: find and replace
 packadd { "https://github.com/MagicDuck/grug-far.nvim" }
+km("n", "<leader>F", function()
+  require("grug-far").toggle_instance {
+    instanceName = "far",
+    staticTitle = "Find and Replace",
+  }
+end)
 
 -- oil: file explorer
 packadd { "https://github.com/stevearc/oil.nvim" }
@@ -132,7 +142,12 @@ km("n", "<leader>fh", snacks.picker.help, { desc = "Help Pages" })
 km("n", "<leader>fb", snacks.picker.buffers, { desc = "Find Buffer" })
 km("n", "<leader>e", snacks.picker.explorer, { desc = "Buffer Diagnostics" })
 km("n", "<leader>fl", snacks.picker.grep, { desc = "Live grep" })
-km("n", "<leader>fw", snacks.picker.grep_word, { desc = "Grep string (under cursor)" })
+km(
+  "n",
+  "<leader>fw",
+  snacks.picker.grep_word,
+  { desc = "Grep string (under cursor)" }
+)
 km("n", "<leader>fm", snacks.picker.man, { desc = "Man Pages" })
 km("n", "<leader>tt", function()
   snacks.picker.grep {
@@ -172,7 +187,7 @@ packadd {
   "https://github.com/kristijanhusak/vim-dadbod-completion",
 }
 g.db_ui_use_nerd_fonts = 1
-g.db_ui_save_location = os.getenv "XDG_CACHE_HOME" .. "/nvim/dbui"
+g.db_ui_save_location = cache_path .. "/nvim/dbui"
 
 -- treesitter syntax highlighting, comments and autopairs
 packadd {
@@ -210,7 +225,8 @@ require("ts_context_commentstring").setup { enable_autocmd = false }
 
 local get_option = vim.filetype.get_option
 vim.filetype.get_option = function(filetype, option)
-  return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
+  return option == "commentstring"
+      and require("ts_context_commentstring.internal").calculate_commentstring()
     or get_option(filetype, option)
 end
 
@@ -221,7 +237,10 @@ require("nvim-ts-autotag").setup()
 packadd {
   "https://github.com/L3MON4D3/LuaSnip",
   "https://github.com/rafamadriz/friendly-snippets",
-  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range "1.*" },
+  {
+    src = "https://github.com/saghen/blink.cmp",
+    version = vim.version.range "1.*",
+  },
 }
 
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -243,7 +262,10 @@ require("blink.cmp").setup {
               local icon = ctx.kind_icon
               -- if LSP source, check for color derived from documentation
               if ctx.item.source_name == "LSP" then
-                local color_item = require("nvim-highlight-colors").format(ctx.item.documentation, { kind = ctx.kind })
+                local color_item = require("nvim-highlight-colors").format(
+                  ctx.item.documentation,
+                  { kind = ctx.kind }
+                )
                 if color_item and color_item.abbr ~= "" then
                   icon = color_item.abbr
                 end
@@ -255,7 +277,10 @@ require("blink.cmp").setup {
               local highlight = "BlinkCmpKind" .. ctx.kind
               -- if LSP source, check for color derived from documentation
               if ctx.item.source_name == "LSP" then
-                local color_item = require("nvim-highlight-colors").format(ctx.item.documentation, { kind = ctx.kind })
+                local color_item = require("nvim-highlight-colors").format(
+                  ctx.item.documentation,
+                  { kind = ctx.kind }
+                )
                 if color_item and color_item.abbr_hl_group then
                   highlight = color_item.abbr_hl_group
                 end
@@ -308,7 +333,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(event)
     local map = function(keys, func, desc, mode)
       mode = mode or "n"
-      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+      vim.keymap.set(
+        mode,
+        keys,
+        func,
+        { buffer = event.buf, desc = "LSP: " .. desc }
+      )
     end
 
     -- pickers
@@ -329,7 +359,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("<leader>do", vim.diagnostic.open_float, "Diagnostic Open")
 
     local function yank_diagnostic_under_cursor()
-      local diagnostics = vim.diagnostic.get(0, { lnum = vim.api.nvim_win_get_cursor(0)[1] - 1 })
+      local diagnostics =
+        vim.diagnostic.get(0, { lnum = vim.api.nvim_win_get_cursor(0)[1] - 1 })
       if #diagnostics > 0 then
         vim.fn.setreg("+", diagnostics[1].message)
         print "Copied diagnostic to clipboard"
@@ -344,7 +375,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local bufnr = event.buf
 
     if client and client.server_capabilities.documentHighlightProvider then
-      local highlight_augroup = vim.api.nvim_create_augroup("nvim-lsp-highlight", { clear = false })
+      local highlight_augroup =
+        vim.api.nvim_create_augroup("nvim-lsp-highlight", { clear = false })
 
       vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         buffer = bufnr,
@@ -363,7 +395,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
 
       vim.api.nvim_create_autocmd("LspDetach", {
-        group = vim.api.nvim_create_augroup("nvim-lsp-detach", { clear = true }),
+        group = vim.api.nvim_create_augroup(
+          "nvim-lsp-detach",
+          { clear = true }
+        ),
         callback = function(event2)
           vim.lsp.buf.clear_references()
           vim.api.nvim_clear_autocmds {
@@ -376,7 +411,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     if client then
       map("<leader>th", function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+        vim.lsp.inlay_hint.enable(
+          not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }
+        )
       end, "Toggle Inlay Hints")
     end
   end,
@@ -392,6 +429,7 @@ require("mason-tool-installer").setup {
     "cmakelang",
 
     "pyright",
+    "debugpy",
     "ruff",
     "taplo",
 
@@ -411,6 +449,7 @@ require("mason-tool-installer").setup {
     "gopls",
     "goimports",
     "golangci-lint",
+    "delve",
 
     "rust_analyzer",
 
@@ -430,6 +469,17 @@ require("mason-lspconfig").setup {
     function(server_name)
       require("lspconfig")[server_name].setup { capabilities = capabilities }
     end,
+  },
+}
+
+-- language specific tools
+packadd {
+  "https://github.com/nvim-flutter/flutter-tools.nvim",
+}
+
+require("flutter-tools").setup {
+  lsp = {
+    capabilities = capabilities,
   },
 }
 
@@ -503,12 +553,156 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
   end,
 })
 
+-- debugger
+packadd {
+  "https://github.com/mfussenegger/nvim-dap",
+  {
+    src = "https://github.com/igorlfs/nvim-dap-view",
+    version = vim.version.range "1.*",
+  },
+  "https://codeberg.org/Jorenar/nvim-dap-disasm",
+  "https://github.com/mfussenegger/nvim-dap-python",
+  "https://github.com/leoluz/nvim-dap-go",
+}
+
+require("dap-go").setup {
+  dap_configurations = {
+    {
+      type = "go",
+      name = "Attach remote",
+      mode = "remote",
+      request = "attach",
+    },
+  },
+  delve = {
+    path = data_path .. "/nvim/mason/bin/dlv",
+  },
+}
+
+local dap_python = require "dap-python"
+dap_python.setup(data_path .. "/nvim/mason/packages/debugpy/venv/bin/python")
+dap_python.test_runner = "pytest"
+
+local dap = require "dap"
+
+dap.adapters.gdb = {
+  type = "executable",
+  command = "gdb",
+  args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+}
+
+dap.configurations.c = {
+  {
+    name = "Launch",
+    type = "gdb",
+    request = "launch",
+    program = function()
+      return vim.fn.input(
+        "Path to executable: ",
+        vim.fn.getcwd() .. "/",
+        "file"
+      )
+    end,
+    args = {}, -- provide arguments if needed
+    cwd = "${workspaceFolder}",
+    stopAtBeginningOfMainSubprogram = false,
+  },
+  {
+    name = "Select and attach to process",
+    type = "gdb",
+    request = "attach",
+    program = function()
+      return vim.fn.input(
+        "Path to executable: ",
+        vim.fn.getcwd() .. "/",
+        "file"
+      )
+    end,
+    pid = function()
+      local name = vim.fn.input "Executable name (filter): "
+      return require("dap.utils").pick_process { filter = name }
+    end,
+    cwd = "${workspaceFolder}",
+  },
+  {
+    name = "Attach to gdbserver :1234",
+    type = "gdb",
+    request = "attach",
+    target = "localhost:1234",
+    program = function()
+      return vim.fn.input(
+        "Path to executable: ",
+        vim.fn.getcwd() .. "/",
+        "file"
+      )
+    end,
+    cwd = "${workspaceFolder}",
+  },
+}
+
+dap.configurations.cpp = dap.configurations.c
+dap.configurations.rust = dap.configurations.c
+
+require("dap-view").setup {
+  winbar = {
+    sections = {
+      "console",
+      "watches",
+      "scopes",
+      "exceptions",
+      "breakpoints",
+      "threads",
+      "repl",
+      "disassembly",
+    },
+    controls = {
+      enabled = true,
+    },
+  },
+  windows = {
+    size = 0.5,
+    position = "right",
+    terminal = {
+      size = 0.5,
+      position = "left",
+      -- List of debug adapters for which the terminal should be ALWAYS hidden
+      -- Can also be set to "true" to never show the terminal
+      hide = {},
+    },
+  },
+  hover = {
+    border = "rounded",
+  },
+  -- TODO: Not working need to check
+  virtual_text = {
+    enabled = true,
+  },
+  auto_toggle = true,
+}
+
+require("dap-disasm").setup {
+  dapview_register = true, -- Crucial: Tells the plugin to register with nvim-dap-view
+  dapview = {
+    keymap = "D", -- Shortcut to switch to this view in the winbar
+    label = "Disassembly",
+    short_label = "   [D]",
+  },
+  ins_before_memref = 16, -- Instructions to show before current PC
+  ins_after_memref = 16, -- Instructions to show after current PC
+}
+
+km("n", "<leader>sb", [[:DapToggleBreakpoint<CR>]])
+km("n", "<leader>dc", [[:DapContinue<CR>]])
+km("n", "<leader>dn", [[:DapNew<CR>]])
+km("n", "<leader>dd", [[:DapViewToggle<CR>]])
+km("n", "<leader>dh", [[:DapViewHover<CR>]])
+
 -- agent and inline completion
 packadd {
   "https://github.com/github/copilot.vim",
 }
 
-vim.keymap.set("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
+km("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
   expr = true,
   replace_keycodes = false,
 })
@@ -517,21 +711,37 @@ packadd {
   "https://github.com/nickjvandyke/opencode.nvim",
 }
 
-g.opencode_opts = {}
+local opencode_cmd = "opencode --port"
 o.autoread = true
+
+---@type snacks.terminal.Opts
+local snacks_terminal_opts = {
+  win = {
+    position = "right",
+    enter = false,
+  },
+}
+
+---@type opencode.Opts
+g.opencode_opts = {
+  server = {
+    start = function()
+      require("snacks.terminal").open(opencode_cmd, snacks_terminal_opts)
+    end,
+  },
+}
 
 local opencode = require "opencode"
 
-km({ "n", "x" }, "<C-a>", function()
+km({ "n", "t" }, "<C-.>", function()
+  require("snacks.terminal").toggle(opencode_cmd, snacks_terminal_opts)
+end, { desc = "Toggle OpenCode" })
+km({ "n", "x" }, "oa", function()
   opencode.ask("@this: ", { submit = true })
 end, { desc = "Ask opencode…" })
-km({ "n", "x" }, "<C-x>", function()
+km({ "n", "x" }, "os", function()
   opencode.select()
 end, { desc = "Execute opencode action…" })
-km({ "n", "t" }, "<C-.>", function()
-  opencode.toggle()
-end, { desc = "Toggle opencode" })
-
 km({ "n", "x" }, "go", function()
   return opencode.operator "@this "
 end, { desc = "Add range to opencode", expr = true })
@@ -570,3 +780,4 @@ local function clean_unused_pack()
 end
 
 km("n", "<leader>pc", clean_unused_pack)
+km("n", "<leader>pu", vim.pack.update)
