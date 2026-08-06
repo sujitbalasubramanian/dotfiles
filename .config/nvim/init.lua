@@ -1,7 +1,6 @@
 local o = vim.opt
 local g = vim.g
 local km = vim.keymap.set
-local packadd = vim.pack.add
 
 -- paths
 local cache_path = os.getenv "XDG_CACHE_HOME" or vim.fn.stdpath "cache"
@@ -60,18 +59,25 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-vim.cmd [[ colo catppuccin ]]
-
 -- =========
 -- PACKAGES
 -- =========
 
+-- theme
+vim.pack.add {
+  "https://github.com/ellisonleao/gruvbox.nvim",
+}
+
+require("gruvbox").setup()
+
+vim.cmd [[ colo gruvbox ]]
+
 -- vimwiki for notes
-packadd { "https://github.com/vimwiki/vimwiki" }
+vim.pack.add { "https://github.com/vimwiki/vimwiki" }
 vim.cmd [[ let g:vimwiki_list = [{'path': '~/Dropbox/Notes', 'syntax': 'markdown', 'ext': 'md'}] ]]
 
 -- mini.nvim
-packadd {
+vim.pack.add {
   "https://github.com/nvim-mini/mini.notify",
   "https://github.com/nvim-mini/mini.surround",
   "https://github.com/nvim-mini/mini.diff",
@@ -85,14 +91,14 @@ require("mini.diff").setup()
 km("n", "<leader>dv", MiniDiff.toggle_overlay, { desc = "Diffview toggle" })
 
 -- git integration
-packadd {
+vim.pack.add {
   "https://github.com/NeogitOrg/neogit",
   "https://github.com/nvim-lua/plenary.nvim",
 }
 km("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Open Neogit UI" })
 
 -- grug-far: find and replace
-packadd { "https://github.com/MagicDuck/grug-far.nvim" }
+vim.pack.add { "https://github.com/MagicDuck/grug-far.nvim" }
 km("n", "<leader>F", function()
   require("grug-far").toggle_instance {
     instanceName = "far",
@@ -101,7 +107,7 @@ km("n", "<leader>F", function()
 end)
 
 -- oil: file explorer
-packadd { "https://github.com/stevearc/oil.nvim" }
+vim.pack.add { "https://github.com/stevearc/oil.nvim" }
 require("oil").setup {
   columns = { "icon", "permissions", "size", "mtime" },
   delete_to_trash = true,
@@ -113,7 +119,7 @@ km("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 km("n", "<leader>-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- picker
-packadd { "https://github.com/folke/snacks.nvim" }
+vim.pack.add { "https://github.com/folke/snacks.nvim" }
 
 local snacks = require "snacks"
 
@@ -149,7 +155,7 @@ km(
   { desc = "Grep string (under cursor)" }
 )
 km("n", "<leader>fm", snacks.picker.man, { desc = "Man Pages" })
-km("n", "<leader>tt", function()
+km("n", "<leader>ft", function()
   snacks.picker.grep {
     search = [[\b(TODO|FIXME|HACK|NOTE|BUG)\b]],
     live = false,
@@ -160,9 +166,15 @@ km("n", "<leader>tt", function()
     end,
   }
 end, { desc = "Todo finder" })
+km(
+  { "n", "t" },
+  "<leader>tt",
+  snacks.terminal.toggle,
+  { desc = "Toggle terminal" }
+)
 
 -- csvview
-packadd { "https://github.com/hat0uma/csvview.nvim" }
+vim.pack.add { "https://github.com/hat0uma/csvview.nvim" }
 require("csvview").setup {
   parser = { comments = { "#", "//" } },
   keymaps = {
@@ -176,12 +188,12 @@ require("csvview").setup {
 }
 
 -- colorizer
-packadd { "https://github.com/brenoprata10/nvim-highlight-colors" }
+vim.pack.add { "https://github.com/brenoprata10/nvim-highlight-colors" }
 require("nvim-highlight-colors").setup {}
 o.termguicolors = true
 
 -- dadbod DBUI
-packadd {
+vim.pack.add {
   "https://github.com/tpope/vim-dadbod",
   "https://github.com/kristijanhusak/vim-dadbod-ui",
   "https://github.com/kristijanhusak/vim-dadbod-completion",
@@ -190,7 +202,7 @@ g.db_ui_use_nerd_fonts = 1
 g.db_ui_save_location = cache_path .. "/nvim/dbui"
 
 -- treesitter syntax highlighting, comments and autopairs
-packadd {
+vim.pack.add {
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/joosepalviste/nvim-ts-context-commentstring",
   "https://github.com/windwp/nvim-autopairs",
@@ -234,7 +246,7 @@ require("nvim-autopairs").setup()
 require("nvim-ts-autotag").setup()
 
 -- blink.cmp and LuaSnip
-packadd {
+vim.pack.add {
   "https://github.com/L3MON4D3/LuaSnip",
   "https://github.com/rafamadriz/friendly-snippets",
   {
@@ -308,7 +320,7 @@ require("blink.cmp").setup {
 }
 
 -- LSP
-packadd {
+vim.pack.add {
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -427,6 +439,7 @@ require("mason-tool-installer").setup {
   ensure_installed = {
     "clangd",
     "cmakelang",
+    "glsl_analyzer",
 
     "pyright",
     "debugpy",
@@ -473,7 +486,7 @@ require("mason-lspconfig").setup {
 }
 
 -- language specific tools
-packadd {
+vim.pack.add {
   "https://github.com/nvim-flutter/flutter-tools.nvim",
 }
 
@@ -484,7 +497,7 @@ require("flutter-tools").setup {
 }
 
 -- conform: formatting
-packadd { "https://github.com/stevearc/conform.nvim" }
+vim.pack.add { "https://github.com/stevearc/conform.nvim" }
 require("conform").setup {
   formatters_by_ft = {
     javascript = { "biome", "oxfmt", "prettier", stop_after_first = true },
@@ -527,7 +540,7 @@ require("conform").setup {
 }
 
 -- nvim-lint: linting
-packadd { "https://github.com/mfussenegger/nvim-lint" }
+vim.pack.add { "https://github.com/mfussenegger/nvim-lint" }
 local lint = require "lint"
 
 lint.linters_by_ft = {
@@ -554,7 +567,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 })
 
 -- debugger
-packadd {
+vim.pack.add {
   "https://github.com/mfussenegger/nvim-dap",
   {
     src = "https://github.com/igorlfs/nvim-dap-view",
@@ -597,11 +610,7 @@ dap.configurations.c = {
     type = "gdb",
     request = "launch",
     program = function()
-      return vim.fn.input(
-        "Path to executable: ",
-        vim.fn.getcwd() .. "/",
-        "file"
-      )
+      return vim.fn.input("Path to exe: ", vim.fn.getcwd() .. "/", "file")
     end,
     args = {}, -- provide arguments if needed
     cwd = "${workspaceFolder}",
@@ -612,11 +621,7 @@ dap.configurations.c = {
     type = "gdb",
     request = "attach",
     program = function()
-      return vim.fn.input(
-        "Path to executable: ",
-        vim.fn.getcwd() .. "/",
-        "file"
-      )
+      return vim.fn.input("Path to exe: ", vim.fn.getcwd() .. "/", "file")
     end,
     pid = function()
       local name = vim.fn.input "Executable name (filter): "
@@ -630,11 +635,7 @@ dap.configurations.c = {
     request = "attach",
     target = "localhost:1234",
     program = function()
-      return vim.fn.input(
-        "Path to executable: ",
-        vim.fn.getcwd() .. "/",
-        "file"
-      )
+      return vim.fn.input("Path to exe: ", vim.fn.getcwd() .. "/", "file")
     end,
     cwd = "${workspaceFolder}",
   },
@@ -698,7 +699,7 @@ km("n", "<leader>dd", [[:DapViewToggle<CR>]])
 km("n", "<leader>dh", [[:DapViewHover<CR>]])
 
 -- agent and inline completion
-packadd {
+vim.pack.add {
   "https://github.com/github/copilot.vim",
 }
 
@@ -707,7 +708,9 @@ km("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
   replace_keycodes = false,
 })
 
-packadd {
+vim.g.copilot_filetypes = { ["*"] = false }
+
+vim.pack.add {
   "https://github.com/nickjvandyke/opencode.nvim",
 }
 
@@ -736,10 +739,10 @@ local opencode = require "opencode"
 km({ "n", "t" }, "<C-.>", function()
   require("snacks.terminal").toggle(opencode_cmd, snacks_terminal_opts)
 end, { desc = "Toggle OpenCode" })
-km({ "n", "x" }, "oa", function()
+km({ "n", "x" }, "<leader>oa", function()
   opencode.ask("@this: ", { submit = true })
 end, { desc = "Ask opencode…" })
-km({ "n", "x" }, "os", function()
+km({ "n", "x" }, "<leader>os", function()
   opencode.select()
 end, { desc = "Execute opencode action…" })
 km({ "n", "x" }, "go", function()

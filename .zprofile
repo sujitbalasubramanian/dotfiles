@@ -44,6 +44,8 @@ export VIDEO="mpv"
 export IMAGE="swayimg"
 export OPENER="xdg-open"
 
+# defaults
 export QT_QPA_PLATFORMTHEME=qt6ct
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border top"
 
 [ "$(tty)" = "/dev/tty1" ] && exec sway

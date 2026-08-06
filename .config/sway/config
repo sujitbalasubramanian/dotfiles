@@ -3,6 +3,7 @@ exec --no-startup-id foot --server
 exec --no-startup-id swaync
 exec --no-startup-id xwayland-satellite
 exec --no-startup-id dropbox
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 ### Globals
 font pango:FiraCode Nerd Font Mono 11
@@ -48,6 +49,7 @@ bindsym $alt+Shift+e exit
 bindsym $alt+q kill
 bindsym $alt+f fullscreen toggle
 bindsym $alt+Shift+t [class="^.*"] border toggle
+bindsym $super+b bar mode toggle
 
 bindsym $alt+b splith
 bindsym $alt+v splitv
@@ -135,8 +137,8 @@ bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-
 bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
 bindsym --locked XF86AudioMicMute exec wpctl set-mute @DFAULT_SOURCE@ toggle
-bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym --locked XF86MonBrightnessDown exec brightness -s -5
+bindsym --locked XF86MonBrightnessUp exec brightness -s +5
 
 mode "quicklanch" {
     bindsym b exec "$BROWSER & swaymsg mode default"

@@ -57,7 +57,7 @@ bindkey '^E' edit-command-line
 # Aliases
 alias ls='ls --color=auto' \
   grep='grep --color=auto' \
-  pacc='sudo pacman -R $(pacman -Qtdq)' \
+  pacc='[[ -n $(pacman -Qtdq) ]] && sudo pacman -R $(pacman -Qtdq) || echo "clean"' \
   vim='nvim' \
   vimdiff='nvim -d' \
   oil='nvim -c Oil' \
@@ -65,13 +65,6 @@ alias ls='ls --color=auto' \
   dbui='nvim -c DBUI'
 
 # completion and activation
-if command -v fzf >/dev/null; then
-    source /usr/share/fzf/completion.zsh
-    source /usr/share/fzf/key-bindings.zsh
-fi
-
-if command -v pyenv >/dev/null; then
-  eval "$(pyenv init -)"
-fi
-
-[[ -f "/usr/share/nvm/init-nvm.sh" ]] && source /usr/share/nvm/init-nvm.sh
+command -v fzf &> /dev/null && source /usr/share/fzf/completion.zsh && source /usr/share/fzf/key-bindings.zsh || echo "fzf not found"
+command -v pyenv &> /dev/null && eval "$(pyenv init -)" || echo "pyenv not found"
+[[ -f /usr/share/nvm/init-nvm.sh ]] && source /usr/share/nvm/init-nvm.sh || echo "nvm not found"

@@ -18,18 +18,19 @@ if [[ -z "$1" ]]; then
   exit 1
 fi
 
+search_dirs=("Learn" "Projects" "Work")
+
 case "$1" in
 
   ws)
-    default_dirs=("$HOME/work" "$HOME/programs" "$HOME/learn")
-
     selected_dir=$(
-      for dir in "${default_dirs[@]}"; do
-        if [[ -d "$dir" ]]; then
-          find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+      for dir in "${search_dirs[@]}"; do
+        if [[ -d "$HOME/$dir" ]]; then
+          find "$HOME/$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
         fi
-      done | fzf
+      done | fzf --delimiter='/' --with-nth='-2..'
     )
+
     if [[ -n "$selected_dir" ]]; then
       create_session "$(basename "$selected_dir")" "$selected_dir"
       exit 0
@@ -46,9 +47,13 @@ case "$1" in
     ;;
 
   help)
-    echo ""
+    dirstr=""
+    for dir in "${search_dirs[@]}"; do
+      dirstr+="~/$dir "
+    done
+
     echo "Tmux Session Manager"
-    echo "--------------------"
+    echo ""
     echo "Usage:"
     echo "  tsm <session-name>"
     echo "      Create a <session-name> using current directory or if <session-name> exist will attach to that session."
@@ -57,7 +62,7 @@ case "$1" in
     echo "      Create/attach a session using the current directory name."
     echo ""
     echo "  tsm ws"
-    echo "      Pick a directory from ~/work or ~/programs and create a session."
+    echo "      Pick a directory from $dirstr and create a session."
     echo ""
     echo "  tsm switch"
     echo "      Switch to an existing tmux session."
