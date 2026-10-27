@@ -23,7 +23,7 @@ search_dirs=("Learn" "Projects" "Work")
 case "$1" in
 
   ws)
-    selected_dir=$(
+    selected_path=$(
       for dir in "${search_dirs[@]}"; do
         if [[ -d "$HOME/$dir" ]]; then
           find "$HOME/$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
@@ -31,8 +31,9 @@ case "$1" in
       done | fzf --delimiter='/' --with-nth='-2..'
     )
 
-    if [[ -n "$selected_dir" ]]; then
-      create_session "$(basename "$selected_dir")" "$selected_dir"
+    if [[ -n "$selected_path" ]]; then
+      selected_dir=$(echo "$selected_path" | awk -F'/' '{print $(NF-1)"/"$NF}')
+      create_session "$selected_dir" "$selected_path"
       exit 0
     fi
     ;;
