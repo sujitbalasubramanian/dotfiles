@@ -61,8 +61,7 @@ alias ls='ls --color=auto' \
   vim='nvim' \
   vimdiff='nvim -d' \
   oil='nvim -c Oil' \
-  neogit='nvim -c Neogit' \
-  dbui='nvim -c DBUI'
+  neogit='nvim -c Neogit'
 
 # completion and activation
 command -v fzf &> /dev/null && source /usr/share/fzf/completion.zsh && source /usr/share/fzf/key-bindings.zsh || echo "fzf not found"

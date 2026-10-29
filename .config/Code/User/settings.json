@@ -1,0 +1,214 @@
+{
+  "settingsSync.ignoredSettings": ["todo-tree.ripgrep.ripgrep"],
+  "keyboard.dispatch": "keyCode",
+
+  "editor.fontSize": 14,
+  "editor.fontFamily": "'FiraCode Nerd Font Mono', 'monospace', monospace",
+  "editor.lineNumbers": "relative",
+  "editor.tabSize": 2,
+  "editor.rulers": [80],
+  "editor.minimap.autohide": "mouseover",
+  "editor.formatOnSave": true,
+
+  "window.zoomLevel": 1.25,
+  "window.commandCenter": false,
+
+  "workbench.startupEditor": "none",
+  "workbench.colorTheme": "Gruvbox Dark Hard",
+  "workbench.editor.showTabs": "none",
+  "workbench.sideBar.location": "right",
+  "workbench.editor.editorActionsLocation": "titleBar",
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
+    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.ui": "default",
+    "*.qrc": "qt-core.qrcEditor",
+  },
+
+  "breadcrumbs.enabled": true,
+
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+
+  "search.seedWithNearestWord": true,
+
+  "git.autofetch": true,
+  "git.openRepositoryInParentFolders": "always",
+  "diffEditor.codeLens": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+
+  "terminal.integrated.profiles.windows": {
+    "VS 2026 x64 CMD": {
+      "path": "C:\\Windows\\System32\\cmd.exe",
+      "args": [
+        "/k",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\Tools\\VsDevCmd.bat",
+        "-arch=x64",
+        "-host_arch=x64",
+      ],
+    },
+    "VS 2026 x64 PS": {
+      "path": "powershell.exe",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "& 'C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\Tools\\Launch-VsDevShell.ps1' -Arch amd64 -HostArch amd64 -SkipAutomaticLocation",
+      ],
+    },
+    "MinGW UCRT64": {
+      "path": "C:\\Windows\\System32\\cmd.exe",
+      "env": {
+        "PATH": "C:\\msys64\\ucrt64\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Windows\\System32\\Wbem",
+      },
+      "icon": "terminal-cmd",
+    },
+    "MSYS2 UCRT64": {
+      "path": "C:\\msys64\\msys2_shell.cmd",
+      "args": ["-defterm", "-here", "-no-start", "-ucrt64"],
+    },
+  },
+  "terminal.integrated.defaultProfile.windows": "VS 2026 x64 PS",
+
+  "json.schemaDownload.trustedDomains": {
+    "https://schemastore.azurewebsites.net/": true,
+    "https://raw.githubusercontent.com/": true,
+    "https://www.schemastore.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://json-schema.org/": true,
+    "https://biomejs.dev": true,
+  },
+
+  // turn off telemetry
+  "telemetry.feedback.enabled": false,
+  "telemetry.telemetryLevel": "off",
+
+  // language specific configuration
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+
+  // extension configuration
+  "excalidraw.theme": "light",
+  "todo-tree.ripgrep.ripgrep": "/bin/rg",
+  "latex-workshop.formatting.latex": "tex-fmt",
+  "qt-core.showWelcomePageOnActivation": false,
+  "biome.suggestInstallingGlobally": false,
+  "github.copilot.nextEditSuggestions.enabled": true,
+
+  // cmake tools configuration
+  "cmake.enableAutomaticKitScan": false,
+  "cmake.removeStaleKitsOnScan": true,
+  "cmake.configureOnOpen": false,
+  "cmake.configureOnEdit": false,
+  "cmake.automaticReconfigure": false,
+  "cmake.autoSelectActiveFolder": false,
+  "cmake.ignoreCMakeListsMissing": true,
+  "cmake.additionalCompilerSearchDirs": [
+    "C:/msys64/mingw64/bin",
+    "C:/msys64/ucrt64/bin",
+    "C:/msys64/clang64/bin",
+  ],
+
+  // vim configuration
+  "vim.leader": "<space>",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "y"],
+      "after": ["\"", "+", "y"],
+    },
+    {
+      "before": ["<leader>", "p"],
+      "after": ["\"", "+", "p"],
+    },
+    {
+      "before": ["H"],
+      "commands": ["workbench.action.nextEditor"],
+    },
+    {
+      "before": ["L"],
+      "commands": ["workbench.action.previousEditor"],
+    },
+    {
+      "before": ["<leader>", "f", "f"],
+      "commands": ["workbench.action.quickOpen"],
+    },
+    {
+      "before": ["<leader>", "f", "b"],
+      "commands": ["workbench.action.showAllEditors"],
+    },
+    {
+      "before": ["<leader>", "f", "l"],
+      "commands": ["workbench.action.findInFiles"],
+    },
+    {
+      "before": ["<leader>", "f", "d"],
+      "commands": ["workbench.actions.view.problems"],
+    },
+    {
+      "before": ["<leader>", "f", "D"],
+      "commands": ["workbench.action.problems.focus"],
+    },
+    {
+      "before": ["g", "d"],
+      "commands": ["editor.action.revealDefinition"],
+    },
+    {
+      "before": ["g", "r"],
+      "commands": ["editor.action.goToReferences"],
+    },
+    {
+      "before": ["g", "t"],
+      "commands": ["editor.action.goToTypeDefinition"],
+    },
+    {
+      "before": ["g", "I"],
+      "commands": ["editor.action.goToImplementation"],
+    },
+    {
+      "before": ["K"],
+      "commands": ["editor.action.showHover"],
+    },
+    {
+      "before": ["<leader>", "r", "n"],
+      "commands": ["editor.action.rename"],
+    },
+    {
+      "before": ["<leader>", "c", "a"],
+      "commands": ["editor.action.quickFix"],
+    },
+    {
+      "before": ["]", "d"],
+      "commands": ["editor.action.marker.nextInFiles"],
+    },
+    {
+      "before": ["[", "d"],
+      "commands": ["editor.action.marker.prevInFiles"],
+    },
+    {
+      "before": ["<leader>", "b"],
+      "commands": ["workbench.action.toggleSidebarVisibility"],
+    },
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "y"],
+      "after": ["\"", "+", "y"],
+    },
+    {
+      "before": ["J"],
+      "commands": ["editor.action.moveLinesDownAction"],
+    },
+    {
+      "before": ["K"],
+      "commands": ["editor.action.moveLinesUpAction"],
+    },
+    {
+      "before": ["<leader>", "c", "a"],
+      "commands": ["editor.action.quickFix"],
+    },
+  ],
+  "vim.handleKeys": {
+    "<C-j>": false,
+    "<C-k>": false,
+  },
+}

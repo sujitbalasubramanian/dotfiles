@@ -14,6 +14,7 @@ ccache
 chromium
 clang
 cmake
+cuda
 dbeaver
 dmidecode
 dnsmasq
@@ -34,7 +35,6 @@ github-cli
 gnome-keyring
 gnome-themes-extra
 go
-grim
 grub
 gvfs
 gvfs-mtp
@@ -62,15 +62,18 @@ noto-fonts-cjk
 noto-fonts-emoji
 ntfs-3g
 nvm
+nwg-displays
 nwg-look
 obs-studio
 okular
+opencode
 openjdk21-src
 openssh
 os-prober
 pipewire
 pipewire-pulse
 polkit-gnome
+presenterm
 pyenv
 python-poetry
 qbittorrent
@@ -80,7 +83,6 @@ remmina
 ripgrep
 rustup
 scrcpy
-slurp
 stow
 sudo
 sway
@@ -89,6 +91,7 @@ swayidle
 swayimg
 swaylock
 swaync
+tex-fmt
 texlive-binextra
 texlive-fontsextra
 texlive-fontsrecommended
