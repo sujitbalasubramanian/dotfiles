@@ -2,6 +2,7 @@ android-studio
 archlinux-wallpaper
 base
 base-devel
+bazelisk
 bc
 blender
 bluetui
@@ -42,7 +43,6 @@ imagemagick
 jq
 lazydocker
 libappindicator
-libreoffice-fresh
 linux
 linux-firmware
 linux-headers
@@ -66,6 +66,7 @@ nwg-displays
 nwg-look
 obs-studio
 okular
+onlyoffice-bin
 opencode
 openjdk21-src
 openssh
@@ -103,7 +104,6 @@ tlp
 tlp-rdw
 tmux
 trash-cli
-tree-sitter-cli
 ttf-firacode-nerd
 unzip
 usbutils

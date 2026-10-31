@@ -1,1 +1,33 @@
+let mapleader = " "
+
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+
+nnoremap H :action NextTab<CR>
+nnoremap L :action PreviousTab<CR>
+
+vnoremap J :action MoveLineDown<CR>
+vnoremap K :action MoveLineUp<CR>
+
+nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>fb :action RecentFiles<CR>
+nnoremap <leader>fl :action FindInPath<CR>
+nnoremap <leader>fd :action ActivateProblemsViewToolWindow<CR>
+nnoremap <leader>fD :action ActivateProblemsViewToolWindow<CR>
+
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gr :action FindUsages<CR>
+nnoremap gt :action GotoTypeDeclaration<CR>
+nnoremap gI :action GotoImplementation<CR>
+nnoremap K  :action QuickJavaDoc<CR>
+
+nnoremap <leader>rn :action RenameElement<CR>
+nnoremap <leader>ca :action ShowIntentionActions<CR>
+vnoremap <leader>ca :action ShowIntentionActions<CR>
+nnoremap ]d :action GotoNextError<CR>
+nnoremap [d :action GotoPreviousError<CR>
+
+nnoremap <leader>b :action HideAllWindows<CR>
+
 set commentary

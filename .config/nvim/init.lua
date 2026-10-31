@@ -2,9 +2,7 @@ local o = vim.opt
 local g = vim.g
 local km = vim.keymap.set
 
--- paths
 local cache_path = os.getenv "XDG_CACHE_HOME" or vim.fn.stdpath "cache"
-local data_path = os.getenv "XDG_DATA_HOME" or vim.fn.stdpath "data"
 
 -- settings
 o.syntax = "on"
@@ -97,15 +95,6 @@ vim.pack.add {
 }
 km("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Open Neogit UI" })
 
--- grug-far: find and replace
-vim.pack.add { "https://github.com/MagicDuck/grug-far.nvim" }
-km("n", "<leader>F", function()
-  require("grug-far").toggle_instance {
-    instanceName = "far",
-    staticTitle = "Find and Replace",
-  }
-end)
-
 -- oil: file explorer
 vim.pack.add { "https://github.com/stevearc/oil.nvim" }
 require("oil").setup {
@@ -125,21 +114,7 @@ local snacks = require "snacks"
 
 snacks.setup {
   input = { enabled = true },
-  picker = {
-    enabled = true,
-    actions = {
-      opencode_send = function(...)
-        return require("opencode").snacks_picker_send(...)
-      end,
-    },
-    win = {
-      input = {
-        keys = {
-          ["<c-l>"] = { "opencode_send", mode = { "n", "i" } },
-        },
-      },
-    },
-  },
+  picker = { enabled = true },
 }
 
 km("n", "<leader>ff", snacks.picker.files, { desc = "Find Files" })
@@ -166,47 +141,11 @@ km("n", "<leader>ft", function()
     end,
   }
 end, { desc = "Todo finder" })
-km(
-  { "n", "t" },
-  "<leader>tt",
-  snacks.terminal.toggle,
-  { desc = "Toggle terminal" }
-)
-
--- csvview
-vim.pack.add { "https://github.com/hat0uma/csvview.nvim" }
-require("csvview").setup {
-  parser = { comments = { "#", "//" } },
-  keymaps = {
-    textobject_field_inner = { "if", mode = { "o", "x" } },
-    textobject_field_outer = { "af", mode = { "o", "x" } },
-    jump_next_field_end = { "<Tab>", mode = { "n", "v" } },
-    jump_prev_field_end = { "<S-Tab>", mode = { "n", "v" } },
-    jump_next_row = { "<Enter>", mode = { "n", "v" } },
-    jump_prev_row = { "<S-Enter>", mode = { "n", "v" } },
-  },
-}
-
--- colorizer
-vim.pack.add { "https://github.com/brenoprata10/nvim-highlight-colors" }
-require("nvim-highlight-colors").setup {}
-o.termguicolors = true
-
--- dadbod DBUI
-vim.pack.add {
-  "https://github.com/tpope/vim-dadbod",
-  "https://github.com/kristijanhusak/vim-dadbod-ui",
-  "https://github.com/kristijanhusak/vim-dadbod-completion",
-}
-g.db_ui_use_nerd_fonts = 1
-g.db_ui_save_location = cache_path .. "/nvim/dbui"
 
 -- treesitter syntax highlighting, comments and autopairs
 vim.pack.add {
   "https://github.com/nvim-treesitter/nvim-treesitter",
-  "https://github.com/joosepalviste/nvim-ts-context-commentstring",
   "https://github.com/windwp/nvim-autopairs",
-  "https://github.com/windwp/nvim-ts-autotag",
 }
 
 require("nvim-treesitter").setup {
@@ -233,17 +172,7 @@ require("nvim-treesitter").setup {
   },
 }
 
-require("ts_context_commentstring").setup { enable_autocmd = false }
-
-local get_option = vim.filetype.get_option
-vim.filetype.get_option = function(filetype, option)
-  return option == "commentstring"
-      and require("ts_context_commentstring.internal").calculate_commentstring()
-    or get_option(filetype, option)
-end
-
 require("nvim-autopairs").setup()
-require("nvim-ts-autotag").setup()
 
 -- blink.cmp and LuaSnip
 vim.pack.add {
@@ -263,58 +192,10 @@ require("blink.cmp").setup {
   keymap = { preset = "default" },
   snippets = { preset = "luasnip" },
   completion = {
-    documentation = { auto_show = false },
-    menu = {
-      draw = {
-        components = {
-          -- customize the drawing of kind icons
-          kind_icon = {
-            text = function(ctx)
-              -- default kind icon
-              local icon = ctx.kind_icon
-              -- if LSP source, check for color derived from documentation
-              if ctx.item.source_name == "LSP" then
-                local color_item = require("nvim-highlight-colors").format(
-                  ctx.item.documentation,
-                  { kind = ctx.kind }
-                )
-                if color_item and color_item.abbr ~= "" then
-                  icon = color_item.abbr
-                end
-              end
-              return icon .. ctx.icon_gap
-            end,
-            highlight = function(ctx)
-              -- default highlight group
-              local highlight = "BlinkCmpKind" .. ctx.kind
-              -- if LSP source, check for color derived from documentation
-              if ctx.item.source_name == "LSP" then
-                local color_item = require("nvim-highlight-colors").format(
-                  ctx.item.documentation,
-                  { kind = ctx.kind }
-                )
-                if color_item and color_item.abbr_hl_group then
-                  highlight = color_item.abbr_hl_group
-                end
-              end
-              return highlight
-            end,
-          },
-        },
-      },
-    },
+    documentation = { auto_show = true },
   },
   sources = {
     default = { "lsp", "path", "snippets", "buffer" },
-    per_filetype = {
-      sql = { "snippets", "dadbod", "buffer" },
-    },
-    providers = {
-      dadbod = {
-        name = "Dadbod",
-        module = "vim_dadbod_completion.blink",
-      },
-    },
   },
   fuzzy = { implementation = "prefer_rust_with_warning" },
 }
@@ -439,39 +320,12 @@ require("mason-tool-installer").setup {
   ensure_installed = {
     "clangd",
     "cmakelang",
-    "glsl_analyzer",
 
-    "pyright",
-    "debugpy",
-    "ruff",
+    "rust_analyzer",
     "taplo",
 
     "lua_ls",
     "stylua",
-
-    "ts_ls",
-    "prettier",
-    "biome",
-    "oxfmt",
-    "oxlint",
-    "tailwindcss",
-    "emmet_ls",
-    "cssls",
-    "astro",
-
-    "gopls",
-    "goimports",
-    "golangci-lint",
-    "delve",
-
-    "rust_analyzer",
-
-    "dockerls",
-
-    "sqlfmt",
-    "sqlfluff",
-
-    "tex-fmt",
   },
 }
 
@@ -485,52 +339,20 @@ require("mason-lspconfig").setup {
   },
 }
 
--- language specific tools
-vim.pack.add {
-  "https://github.com/nvim-flutter/flutter-tools.nvim",
-}
-
-require("flutter-tools").setup {
-  lsp = {
-    capabilities = capabilities,
-  },
-}
-
 -- conform: formatting
 vim.pack.add { "https://github.com/stevearc/conform.nvim" }
 require("conform").setup {
   formatters_by_ft = {
-    javascript = { "biome", "oxfmt", "prettier", stop_after_first = true },
-    typescript = { "biome", "oxfmt", "prettier", stop_after_first = true },
-    javascriptreact = { "biome", "oxfmt", "prettier", stop_after_first = true },
-    typescriptreact = { "biome", "oxfmt", "prettier", stop_after_first = true },
-    css = { "prettier" },
-    html = { "prettier" },
-    astro = { "prettier" },
     json = { "jq" },
-    yaml = { "prettier" },
-    vimwiki = { "prettier" },
     lua = { "stylua" },
     c = { "clang_format" },
     cpp = { "clang_format" },
     cmake = { "cmake_format" },
-    tex = { "tex-fmt" },
-    go = { "gofmt", "goimports" },
     rust = { "rustfmt", lsp_format = "fallback" },
-    python = { "ruff_fix", "ruff_format" },
-    sql = { "sqlfmt" },
     toml = { "taplo" },
   },
   default_format_opts = {
     lsp_format = "fallback",
-  },
-  formatters = {
-    biome = {
-      require_cwd = true,
-    },
-    oxfmt = {
-      require_cwd = true,
-    },
   },
   format_on_save = {
     lsp_fallback = true,
@@ -538,226 +360,6 @@ require("conform").setup {
     timeout_ms = 500,
   },
 }
-
--- nvim-lint: linting
-vim.pack.add { "https://github.com/mfussenegger/nvim-lint" }
-local lint = require "lint"
-
-lint.linters_by_ft = {
-  javascript = { "biomejs", "oxlint", "eslint_d" },
-  javascriptreact = { "biomejs", "oxlint", "eslint_d" },
-  typescript = { "biomejs", "oxlint", "eslint_d" },
-  typescriptreact = { "biomejs", "oxlint", "eslint_d" },
-  c = { "clangtidy" },
-  cpp = { "clangtidy" },
-  go = { "golangcilint" },
-  rust = { "clippy" },
-  python = { "ruff" },
-  sql = { "sqlfluff" },
-}
-
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-  group = vim.api.nvim_create_augroup("lint", { clear = true }),
-  callback = function()
-    local ft = vim.bo.filetype
-    if lint.linters_by_ft[ft] then
-      lint.try_lint()
-    end
-  end,
-})
-
--- debugger
-vim.pack.add {
-  "https://github.com/mfussenegger/nvim-dap",
-  {
-    src = "https://github.com/igorlfs/nvim-dap-view",
-    version = vim.version.range "1.*",
-  },
-  "https://codeberg.org/Jorenar/nvim-dap-disasm",
-  "https://github.com/mfussenegger/nvim-dap-python",
-  "https://github.com/leoluz/nvim-dap-go",
-}
-
-require("dap-go").setup {
-  dap_configurations = {
-    {
-      type = "go",
-      name = "Attach remote",
-      mode = "remote",
-      request = "attach",
-    },
-  },
-  delve = {
-    path = data_path .. "/nvim/mason/bin/dlv",
-  },
-}
-
-local dap_python = require "dap-python"
-dap_python.setup(data_path .. "/nvim/mason/packages/debugpy/venv/bin/python")
-dap_python.test_runner = "pytest"
-
-local dap = require "dap"
-
-dap.adapters.gdb = {
-  type = "executable",
-  command = "gdb",
-  args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
-}
-
-dap.configurations.c = {
-  {
-    name = "Launch",
-    type = "gdb",
-    request = "launch",
-    program = function()
-      return vim.fn.input("Path to exe: ", vim.fn.getcwd() .. "/", "file")
-    end,
-    args = {}, -- provide arguments if needed
-    cwd = "${workspaceFolder}",
-    stopAtBeginningOfMainSubprogram = false,
-  },
-  {
-    name = "Select and attach to process",
-    type = "gdb",
-    request = "attach",
-    program = function()
-      return vim.fn.input("Path to exe: ", vim.fn.getcwd() .. "/", "file")
-    end,
-    pid = function()
-      local name = vim.fn.input "Executable name (filter): "
-      return require("dap.utils").pick_process { filter = name }
-    end,
-    cwd = "${workspaceFolder}",
-  },
-  {
-    name = "Attach to gdbserver :1234",
-    type = "gdb",
-    request = "attach",
-    target = "localhost:1234",
-    program = function()
-      return vim.fn.input("Path to exe: ", vim.fn.getcwd() .. "/", "file")
-    end,
-    cwd = "${workspaceFolder}",
-  },
-}
-
-dap.configurations.cpp = dap.configurations.c
-dap.configurations.rust = dap.configurations.c
-
-require("dap-view").setup {
-  winbar = {
-    sections = {
-      "console",
-      "watches",
-      "scopes",
-      "exceptions",
-      "breakpoints",
-      "threads",
-      "repl",
-      "disassembly",
-    },
-    controls = {
-      enabled = true,
-    },
-  },
-  windows = {
-    size = 0.5,
-    position = "right",
-    terminal = {
-      size = 0.5,
-      position = "left",
-      -- List of debug adapters for which the terminal should be ALWAYS hidden
-      -- Can also be set to "true" to never show the terminal
-      hide = {},
-    },
-  },
-  hover = {
-    border = "rounded",
-  },
-  -- TODO: Not working need to check
-  virtual_text = {
-    enabled = true,
-  },
-  auto_toggle = true,
-}
-
-require("dap-disasm").setup {
-  dapview_register = true, -- Crucial: Tells the plugin to register with nvim-dap-view
-  dapview = {
-    keymap = "D", -- Shortcut to switch to this view in the winbar
-    label = "Disassembly",
-    short_label = "   [D]",
-  },
-  ins_before_memref = 16, -- Instructions to show before current PC
-  ins_after_memref = 16, -- Instructions to show after current PC
-}
-
-km("n", "<leader>sb", [[:DapToggleBreakpoint<CR>]])
-km("n", "<leader>dc", [[:DapContinue<CR>]])
-km("n", "<leader>dn", [[:DapNew<CR>]])
-km("n", "<leader>dd", [[:DapViewToggle<CR>]])
-km("n", "<leader>dh", [[:DapViewHover<CR>]])
-
--- agent and inline completion
-vim.pack.add {
-  "https://github.com/github/copilot.vim",
-}
-
-km("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
-  expr = true,
-  replace_keycodes = false,
-})
-
-vim.g.copilot_filetypes = { ["*"] = false }
-
-vim.pack.add {
-  "https://github.com/nickjvandyke/opencode.nvim",
-}
-
-local opencode_cmd = "opencode --port"
-o.autoread = true
-
----@type snacks.terminal.Opts
-local snacks_terminal_opts = {
-  win = {
-    position = "right",
-    enter = false,
-  },
-}
-
----@type opencode.Opts
-g.opencode_opts = {
-  server = {
-    start = function()
-      require("snacks.terminal").open(opencode_cmd, snacks_terminal_opts)
-    end,
-  },
-}
-
-local opencode = require "opencode"
-
-km({ "n", "t" }, "<C-.>", function()
-  require("snacks.terminal").toggle(opencode_cmd, snacks_terminal_opts)
-end, { desc = "Toggle OpenCode" })
-km({ "n", "x" }, "<leader>oa", function()
-  opencode.ask("@this: ", { submit = true })
-end, { desc = "Ask opencode…" })
-km({ "n", "x" }, "<leader>os", function()
-  opencode.select()
-end, { desc = "Execute opencode action…" })
-km({ "n", "x" }, "go", function()
-  return opencode.operator "@this "
-end, { desc = "Add range to opencode", expr = true })
-km("n", "goo", function()
-  return opencode.operator "@this " .. "_"
-end, { desc = "Add line to opencode", expr = true })
-
-km("n", "<S-C-u>", function()
-  opencode.command "session.half.page.up"
-end, { desc = "Scroll opencode up" })
-km("n", "<S-C-d>", function()
-  opencode.command "session.half.page.down"
-end, { desc = "Scroll opencode down" })
 
 -- custom functions
 local function clean_unused_pack()
